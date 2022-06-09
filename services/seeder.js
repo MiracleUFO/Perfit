@@ -11,9 +11,10 @@ const populate = async () => {
             .then(res => res.json())
             .then(json => {
                 json.map(user => {
-                    const { email } = user;
+                    const { email, id } = user;
                     const { state, country } = user.address;
                     const formattedUser = {
+                        id,
                         firstName: user.first_name,
                         lastName: user.last_name,
                         dob: user.date_of_birth,

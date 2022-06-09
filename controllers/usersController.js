@@ -2,6 +2,7 @@ const User = require("../models/users");
 
 const createUser = async (data) => {
     const {
+        id,
         firstName,
         lastName,
         dob,
@@ -14,6 +15,7 @@ const createUser = async (data) => {
     } = data;
 
     const userData = {
+        id,
         firstName,
         lastName,
         dob,
