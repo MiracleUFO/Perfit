@@ -31,4 +31,15 @@ const createUser = async (data) => {
     await newUser.save();
 }
 
-module.exports = createUser;
+const getUsers = async (req, res) => {
+    User.find({})
+        .then(users => res.send(users));
+}
+
+module.exports = {
+    createUser,
+    getUsers,
+    /* getUser,
+    addNewUser,
+    editExistingUser */
+};

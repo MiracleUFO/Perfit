@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const fetch = require('node-fetch');
 const db = require("../db/connection");
-const createUser = require('../controllers/usersController');
+const { createUser } = require('../controllers/usersController');
 
 
 const populate = async () => {
