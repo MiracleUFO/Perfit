@@ -36,10 +36,16 @@ const getUsers = async (req, res) => {
         .then(users => res.send(users));
 }
 
+const getUser = async (req, res) => {
+    const {id } = req.params;
+    User.findOne({ id: id })
+        .then(user => res.send(user));
+}
+
 module.exports = {
     createUser,
     getUsers,
-    /* getUser,
-    addNewUser,
+    getUser,
+    /* addNewUser,
     editExistingUser */
 };
