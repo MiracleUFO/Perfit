@@ -6,7 +6,8 @@ require("dotenv").config({ path: "./config.env" });
 
 const port = process.env.PORT || 6000;
 
-const dbo = require("./db/connection");
+const db = require("./db/connection");
+const seedDatabase = require("./services/seeder");
 
 app.use(express.static(path.join(__dirname, "client", "build")));
 app.use(cors());
@@ -17,8 +18,9 @@ app.get("*", (req, res) => {
 });
  
 app.listen(port, () => {
-  dbo.connectToServer(function (err) {
-    if (err) console.error(err); 
-  });
-  console.log(`Server is running on port: ${port}`);
+  if (db) {
+    console.log(`Server is running on port: ${port}`);
+  }
 });
+
+seedDatabase();
