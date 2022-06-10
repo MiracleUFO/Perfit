@@ -1,6 +1,12 @@
 .hero-container {
-    width: 90vw;
+    width: 95vw;
     margin: 0 auto;
+}
+
+@media screen and (min-width: 800px) {
+   .hero-container {
+        width: 90vw;
+   }
 }
 
 .hero-main, .hero-other {
@@ -15,11 +21,13 @@
 .hero-main > h1 {
     font-size: 3.2em;
     margin-bottom: 10px;
+    line-height: 63px;
 }
 
 @media screen and (min-width: 800px) {
     .hero-main > h1 {
         font-size: 3.8em;
+        line-height: revert;
     }    
 }
 

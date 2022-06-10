@@ -16,7 +16,7 @@ const Users = () => {
 
     return (
         <div className='container'>
-            <h1>Freelancer Profiles</h1>
+            <h1>Freelancer Profiles 🤖</h1>
             <div id='users-container'>
                 {users.map(user =>
                     <div className='user-container'>
