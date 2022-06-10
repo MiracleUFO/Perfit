@@ -19,11 +19,11 @@ const Hero = () => {
             <div className='hero-main'>
                 <h1>
                     Your next role's best fit,<br />
-                    here on perfit
+                    here on perfit.
                 </h1>
                 <p>
                     A great place to find the best fits for your company. <br />
-                    Delivered at the click of a button
+                    Delivered at the click of a button.
                 </p>
                 <button onClick={scrollDown}>
                     See freelancers →
@@ -32,7 +32,7 @@ const Hero = () => {
 
             <div className='hero-other'>
                 <h2>Premium talent pool</h2>
-                <p>Get experienced builders, some employed by the best companies</p>
+                <p>Get experienced builders, some employed by the best companies.</p>
 
                 <div className='icons-container'>
                     <FaDiscord />

@@ -67,11 +67,22 @@
     color: aliceblue;
     font-size: 1em;
     margin: 0;
+    width: 60%;
+    line-height: 25px;
+}
+
+@media screen and (min-width: 800px) {
+    .hero-other > p {
+        width: 100%;
+    }
 }
 
 .icons-container {
     padding-top: 35px;
     width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 @media screen and (min-width: 800px) {
