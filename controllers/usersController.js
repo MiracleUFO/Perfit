@@ -1,4 +1,4 @@
-const User = require("../models/users");
+const User = require('../models/users');
 
 const createUser = async (data) => {
     const {
@@ -42,10 +42,44 @@ const getUser = async (req, res) => {
         .then(user => res.send(user));
 }
 
+const editExistingUser = async (req, res) => {
+    const { id } = req.params;
+    const { 
+        firstName, 
+        lastName,
+        dob,
+        email,
+        state,
+        country,
+        occupation,
+        keySkill,
+        profilePicture
+    } = req.body;
+
+    User.findOneAndReplace({ id: id }, {
+        id,
+        firstName,
+        lastName,
+        dob,
+        state,
+        country,
+        email,
+        occupation,
+        keySkill,
+        profilePicture
+    }, {
+        new: true
+    }, (err, post) => {
+        if (err) return next(err);
+        res.json(post);
+    });
+}
+
 module.exports = {
     createUser,
     getUsers,
     getUser,
+    editExistingUser,
     /* addNewUser,
-    editExistingUser */
+    r */
 };
