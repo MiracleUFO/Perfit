@@ -18,6 +18,7 @@ const Users = () => {
         <div className='container'>
             <h1>Freelancer Profiles 🤖</h1>
             <div id='users-container'>
+                hey
                 {users.map(user =>
                     <div className='user-container' key={user.id}>
                         <img src={user.profilePicture} alt={user.firstName} />
