@@ -19,7 +19,7 @@ const Users = () => {
             <h1>Freelancer Profiles 🤖</h1>
             <div id='users-container'>
                 {users.map(user =>
-                    <div className='user-container'>
+                    <div className='user-container' key={user.id}>
                         <img src={user.profilePicture} alt={user.firstName} />
 
                         <div className='user-textbox'>

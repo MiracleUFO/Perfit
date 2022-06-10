@@ -8,12 +8,14 @@ footer {
     flex-direction: column;
     padding: 65px 0 100px;
     border-top: 1px solid rgb(220, 220, 220);
+    margin-bottom: 100px;
 }
 
 .input-container {
     position: relative;
     display: flex;
     align-items: center;
+    padding-bottom: 40px;
 }
 
 footer input {

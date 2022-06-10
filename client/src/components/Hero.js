@@ -6,7 +6,7 @@ import '../assets/css/Hero.css';
 
 const Hero = () => {
     const scrollDown = () => {
-        const top = document.getElementById('users-container').getBoundingClientRect().top + window.scrollY + 70;
+        const top = document.getElementById('users-container').getBoundingClientRect().top + window.scrollY - 200;
         window.scroll({
         top: top,
         left: 100,
