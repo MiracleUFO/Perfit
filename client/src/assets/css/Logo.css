@@ -1,0 +1,16 @@
+.logo {
+    color: black;
+    display: flex;
+    align-items: center;
+}
+
+.logo > h1 {
+    font-size: 1.8em;
+    font-family: 'Nunito';
+    font-weight: 600;
+}
+
+.logo-icon {
+    width: 23%;
+    margin-right: 7%;
+}

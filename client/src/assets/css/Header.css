@@ -1,0 +1,14 @@
+a {
+    text-decoration: none;
+    color: #878CD4;
+}
+
+nav {
+    width: 90vw;
+    height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    border-bottom: 1px solid rgb(220, 220, 220);
+}

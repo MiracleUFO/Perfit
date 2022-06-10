@@ -1,0 +1,85 @@
+.hero-container {
+    width: 90vw;
+    margin: 0 auto;
+}
+
+.hero-main, .hero-other {
+    margin-top: 75px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-main > h1 {
+    font-size: 3.2em;
+    margin-bottom: 10px;
+}
+
+@media screen and (min-width: 800px) {
+    .hero-main > h1 {
+        font-size: 3.8em;
+    }    
+}
+
+.hero-main > p {
+   color: #3d3e3eb6;
+}
+
+.hero-main button {
+    background-color: #030102;
+    color: #ECF3FF;
+    border: none;
+    border-radius: 20px;
+    padding: 20px 35px;
+    font-weight: 400;
+    font-size: 1.1em;
+    margin-top: 10px;
+}
+
+.hero-other {
+    background-color: #2735FF;
+    color: #ECF3FF;
+    border-radius: 20px;
+    height: 200px;
+    text-align: center;
+    padding: 30px 0 50px;
+    margin: 90px auto 0;
+    width: 90%;
+}
+
+.hero-other h2 {
+    font-size: 1.7em;
+    margin-bottom: 10px;
+}
+
+.hero-other > p {
+    color: aliceblue;
+    font-size: 1em;
+    margin: 0;
+}
+
+.icons-container {
+    padding-top: 35px;
+    width: 80%;
+}
+
+@media screen and (min-width: 800px) {
+    .icons-container {
+        width: 30%;
+    }
+}
+
+svg {
+    fill: aliceblue;
+    width: 15%;
+    height: 1.5em;
+}
+
+@media screen and (min-width: 800px) {
+    svg {
+        width: 18%;
+        height: 2em;
+    }
+}
