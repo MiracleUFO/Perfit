@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/', router);
 
 app.use((req, res, next) => {
-    next('404 RouteNotFound. This is the end of the earth');
+    next('404 RouteNotFound. This is the end of the earth.');
 });
  
 app.listen(port, () => {

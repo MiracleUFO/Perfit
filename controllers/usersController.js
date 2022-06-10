@@ -1,5 +1,5 @@
-const { default: mongoose } = require('mongoose');
 const User = require('../models/users');
+const { validator, checkUserIdIsUnique }= require('../helpers/userValidator');
 
 const createUser = async (data) => {
     const {
@@ -37,11 +37,11 @@ const getUsers = async (req, res) => {
         .then(users => res.send(users));
 }
 
-const getUser = async (req, res, next) => {
+const getUser = async (req, res) => {
     const {id } = req.params;
     User.findOne({ id: id })
         .then(user => {
-            if (!user) return next(404);
+            if (!user) return res.status(404).json({status: 404, message: 'User does not exist.'});
             res.status(200).json(user);
         });
 }
@@ -60,9 +60,7 @@ const editExistingUser = async (req, res, next) => {
         profilePicture
     } = req.body;
 
-    if (!(firstName && lastName && dob && email && state && country && occupation && keySkill && profilePicture)) {
-        return res.status(400).json({status: 400, message: 'Required fields not sent'});
-    }
+    validator(req, res);
 
     User.findOneAndReplace({ id: id }, {
         id,
@@ -79,6 +77,7 @@ const editExistingUser = async (req, res, next) => {
         new: true
     }, (err, user) => {
         if (err) return next(err);
+        if (!user) return res.status(404).json({status: 404, message: 'User does not exist.'});
         res.status(200).json(user);
     });
 }
@@ -96,14 +95,12 @@ const addNewUser = async (req, res, next) => {
         profilePicture
     } = req.body;
 
-    if (!(firstName && lastName && dob && email && state && country && occupation && keySkill && profilePicture)) {
-        return res.status(400).json({status: 400, message: 'Required fields not sent'});
-    }
+    validator(req, res);
 
-    let user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email });
 
     if (user) {
-        next('User exists already.');
+        next('User already exists.');
     } else {
         const formattedUser = {
             id: Math.ceil(Math.random() * 1000),
@@ -117,6 +114,8 @@ const addNewUser = async (req, res, next) => {
             keySkill,
             profilePicture
         };
+
+        formattedUser.id = await checkUserIdIsUnique(formattedUser.id);
 
         try {
             const result = await createUser(formattedUser);
