@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const User = require('../models/users');
 
 const createUser = async (data) => {
@@ -36,13 +37,16 @@ const getUsers = async (req, res) => {
         .then(users => res.send(users));
 }
 
-const getUser = async (req, res) => {
+const getUser = async (req, res, next) => {
     const {id } = req.params;
     User.findOne({ id: id })
-        .then(user => res.send(user));
+        .then(user => {
+            if (!user) return next(404);
+            res.status(200).json(user);
+        });
 }
 
-const editExistingUser = async (req, res) => {
+const editExistingUser = async (req, res, next) => {
     const { id } = req.params;
     const { 
         firstName, 
@@ -69,10 +73,50 @@ const editExistingUser = async (req, res) => {
         profilePicture
     }, {
         new: true
-    }, (err, post) => {
+    }, (err, user) => {
         if (err) return next(err);
-        res.json(post);
+        res.status(200).json(user);
     });
+}
+
+const addNewUser = async (req, res, next) => {
+    const { 
+        firstName, 
+        lastName,
+        dob,
+        email,
+        state,
+        country,
+        occupation,
+        keySkill,
+        profilePicture
+    } = req.body;
+
+    let user = await User.findOne({ email: email });
+
+    if (user) {
+        next('User exists already.');
+    } else {
+        const formattedUser = {
+            id: Math.ceil(Math.random() * 1000),
+            firstName, 
+            lastName,
+            dob,
+            email,
+            state,
+            country,
+            occupation,
+            keySkill,
+            profilePicture
+        };
+
+        try {
+            const result = await createUser(formattedUser);
+            res.status(201).json(result);
+        } catch (err) {
+            next(err)
+        }
+    }
 }
 
 module.exports = {
@@ -80,6 +124,5 @@ module.exports = {
     getUsers,
     getUser,
     editExistingUser,
-    /* addNewUser,
-    r */
+    addNewUser
 };

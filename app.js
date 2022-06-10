@@ -6,7 +6,6 @@ require('dotenv').config({ path: './config.env' });
 
 const port = process.env.PORT || 8080;
 const db = require('./db/connection');
-const seedDatabase = require('./services/seeder');
 
 app.use(cors());
 app.use(express.json());
