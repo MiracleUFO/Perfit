@@ -1,4 +1,4 @@
-import { useState } from 'react';
+/* import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { close } from '../helpers/modalLogic';
 import Logo from './Logo';
@@ -56,4 +56,4 @@ const AddProfileModal = () => {
       );
 }
 
-export default AddProfileModal;
+export default AddProfileModal; */

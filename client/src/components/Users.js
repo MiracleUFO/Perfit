@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-// import baseUrl from '../helpers/baseUrl';
+import baseUrl from '../helpers/baseUrl';
 
 import '../assets/css/Users.css';
 
@@ -9,7 +9,8 @@ const Users = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        axios.get('/api/users')
+        const url = baseUrl();
+        axios.get(`${url}/api/users`)
             .then(res => setUsers(res.data));
     },  []);
 
