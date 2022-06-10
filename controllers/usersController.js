@@ -60,6 +60,10 @@ const editExistingUser = async (req, res, next) => {
         profilePicture
     } = req.body;
 
+    if (!(firstName && lastName && dob && email && state && country && occupation && keySkill && profilePicture)) {
+        return res.status(400).json({status: 400, message: 'Required fields not sent'});
+    }
+
     User.findOneAndReplace({ id: id }, {
         id,
         firstName,
@@ -91,6 +95,10 @@ const addNewUser = async (req, res, next) => {
         keySkill,
         profilePicture
     } = req.body;
+
+    if (!(firstName && lastName && dob && email && state && country && occupation && keySkill && profilePicture)) {
+        return res.status(400).json({status: 400, message: 'Required fields not sent'});
+    }
 
     let user = await User.findOne({ email: email });
 
