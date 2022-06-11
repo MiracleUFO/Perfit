@@ -1,9 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import LogoIcon from '../assets/images/logo-icon.png';
-import '../assets/css/Logo.css';
+import '../styles/css/Logo.css';
 
-const Logo = () => (
-    <NavLink to="/" className="logo">
+const Logo = ({ onClick }) => (
+    <NavLink 
+        to="/"
+        className="logo"
+        onClick={onClick}
+    >
         <img src={LogoIcon} alt="P Logo" className='logo-icon' />
         <h1>perfit</h1>
     </NavLink>

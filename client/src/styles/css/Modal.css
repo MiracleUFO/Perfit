@@ -1,0 +1,169 @@
+.modal-wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    background: rgba(0,0,0,0.5);
+    font-weight: 900;
+    z-index: 7;
+  }
+  
+.modal-hidden, .none {
+    display: none;
+}
+
+.modal {
+    position: relative;
+    display: flex;
+    width: 70%;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 12px;
+    background: white;
+}
+
+.brand-wrapper {
+    width: 100%;
+    border-bottom: 1px solid rgba(220, 220, 220, 0.35);
+}
+
+.brand-wrapper .logo-icon {
+    width: 10%;
+    margin-right: 2%;
+}
+
+.brand-wrapper, .welcome-text {
+    align-self: flex-start;
+}
+
+.welcome-text {
+    font-size: 1.12em;
+}
+
+.close-icon {
+    position: absolute;
+    top: 15px;
+    left: 90%;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+@media screen and (min-width: 800px) {
+    .close-icon {
+        top: 20px;
+        left: 95%;
+    } 
+}
+
+.section-img {
+    display: none;
+    width: 50%;
+    height: 650px;
+    border-radius: 0 12px 12px 0;
+}
+
+@media screen and (min-width: 800px) {
+    .section-img {
+        display: inline;
+    }
+}
+
+.modal-form , .modal-form form {
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-form {
+    width: 80%;
+    height: 650px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin: 0 auto;
+    justify-content: space-between;
+}
+
+@media screen and (min-width: 800px) {
+    .modal-form {
+        width: 40%;
+    }
+}
+
+.modal-form input, select {
+    width: 90%;
+    height: 48px;
+    padding: 0 1em;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: none;
+    background-color: #ECF3FF;
+}
+
+::placeholder {
+    color:  #3d3e3eb6;
+    opacity: 0.4;
+    text-align: justify;
+}
+
+.input-flex-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-flex-container input {
+    width: 38%;
+}
+
+@media screen and (min-width: 800px) {
+    .modal-form input, select {
+        width: 100%;
+    }
+
+    .input-flex-container {
+        width: calc(100% + 2em);
+    }
+
+    .input-flex-container input {
+        width: 40%;
+    }
+}
+
+.modal button {
+    width: 100%;
+    background: #2735FF;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 20px 35px;
+    font-weight: 400;
+    font-size: 1.1em;
+}
+
+@media screen and (min-width: 800px) {
+    .modal button {
+        width: calc(100% + 2em);
+    }
+}
+
+.have-account-text {
+    text-align: center;
+}
+
+.have-account-text a {
+    color:  #878CD4;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: 400;
+    display: inline-block;
+}
+
+@media screen and (min-width: 800px) {
+    .have-account-text a {
+        display: inline;
+    }
+}

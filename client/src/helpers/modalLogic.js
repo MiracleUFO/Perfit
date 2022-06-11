@@ -1,11 +1,11 @@
 export const displayEditProfileModal = () => {
-    document.getElementById('modal-wrapper-signin').setAttribute('class', 'modal-wrapper');
-    document.getElementById('modal-hidden-signin').setAttribute('class', 'modal');
+    document.getElementById('modal-wrapper-edit-profile').setAttribute('class', 'modal-wrapper');
+    document.getElementById('modal-hidden-edit-profile').setAttribute('class', 'modal');
 }
   
 export const displayAddProfileModal = () => {
-    document.getElementById('modal-wrapper-signup').setAttribute('class', 'modal-wrapper');
-    document.getElementById('modal-hidden-signup').setAttribute('class', 'modal');
+    document.getElementById('modal-wrapper-add-profile').setAttribute('class', 'modal-wrapper');
+    document.getElementById('modal-hidden-add-profile').setAttribute('class', 'modal');
 }
 
 export let close = () => {

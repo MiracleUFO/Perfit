@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import baseUrl from '../helpers/baseUrl';
 
-import '../assets/css/Users.css';
+import '../styles/css/Users.css';
 
 const Users = () => {
     const [users, setUsers] = useState([]);

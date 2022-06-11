@@ -1,15 +1,21 @@
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation} from 'react-router-dom';
 import Logo from './Logo';
-import '../assets/css/Header.css';
+import { displayAddProfileModal } from '../helpers/modalLogic';
+
+import '../styles/css/Header.css';
 
 const Header = () => {
+    const location = useLocation();
     return (
         <header>
             <nav>
                 <Logo />
-                <NavLink to="/add-profile">
+                <Link 
+                    to={{ pathname: "/signup", state: { background: location }}}
+                    onClick={displayAddProfileModal}
+                >
                     Join Community
-                </NavLink>
+                </Link>
             </nav>
         </header>
     )
