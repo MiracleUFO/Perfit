@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import Logo from './Logo';
 
 import { close } from '../helpers/modalLogic';
+import baseUrl from '../helpers/baseUrl';
 import { EMAIL_PATTERN } from '../constants';
 
 import '../styles/css/Modal.css';
 
 const AddProfileModal = () => {
     const [state, setState] = useState({
-        res: '',
         email: '',
         firstName: '',
         lastName: '',
@@ -18,7 +19,8 @@ const AddProfileModal = () => {
         state: '',
         country: '',
         keySkill: '',
-        profilePicture: ''
+        profilePicture: '',
+        responseText: ''
     });
 
     const location = useLocation();
@@ -27,11 +29,46 @@ const AddProfileModal = () => {
         setState({...state, [e.target.name]: e.target.value});
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const {
+            email,
+            firstName,
+            lastName,
+            occupation,
+            dob,
+            country,
+            keySkill,
+            profilePicture
+        } = state;
 
+        const user = {
+            email,
+            firstName,
+            lastName,
+            occupation,
+            dob,
+            state: state.state,
+            country,
+            keySkill,
+            profilePicture
+        }
+        const url = baseUrl();
+        axios.post(url, user)
+            .then(res => setState({...state, responseText: res}))
     }
 
-    const closeModal = (e) => {
+    const disableFutureDates = () => {
+        const today = new Date();
+        let dd, mm, yy;
+        dd = today.getDate() + 1;
+        mm = today.getMonth() + 1;
+        yy = today.getFullYear();
+        const formattedDate = `${yy}-${mm}-${dd}`;
+        return formattedDate;
+    }
+
+    const closeModal = () => {
         close();
     }
     
@@ -67,6 +104,7 @@ const AddProfileModal = () => {
                             pattern={EMAIL_PATTERN}
                             onChange={handleChange}
                         />
+                        <input type="date" id="datemin" name="datemin" min="2000-01-02" />
                         <div className='input-flex-container'>
                             <input 
                                 placeholder='Occupation' 
@@ -96,7 +134,9 @@ const AddProfileModal = () => {
                             />
                         </div>
                         <div className='input-flex-container'>
-                            <input 
+                            <input
+                                type='date'
+                                max={disableFutureDates()}
                                 placeholder='Date of birth' 
                                 required name='dob' 
                                 value={state.dob} 
@@ -112,7 +152,7 @@ const AddProfileModal = () => {
                         <button>Join</button>
                     </form>
         
-                    <p>{state.res}</p>
+                    <p>{state.responseText}</p>
         
                     <p className='have-account-text'>
                         Already have account?
