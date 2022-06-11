@@ -10,18 +10,25 @@
     z-index: 7;
   }
   
-.modal-hidden, .none {
+.modal-hidden,
+.none {
     display: none;
 }
 
 .modal {
     position: relative;
     display: flex;
-    width: 70%;
+    width: 95%;
     align-items: center;
     justify-content: space-between;
     border-radius: 12px;
     background: white;
+}
+
+@media screen and (min-width: 800px) {
+    .modal {
+        width: 70%;
+    }
 }
 
 .brand-wrapper {
@@ -34,7 +41,8 @@
     margin-right: 2%;
 }
 
-.brand-wrapper, .welcome-text {
+.brand-wrapper,
+.welcome-text {
     align-self: flex-start;
 }
 
@@ -70,7 +78,8 @@
     }
 }
 
-.modal-form , .modal-form form {
+.modal-form,
+.modal-form .form {
     background: white;
     display: flex;
     flex-direction: column;
@@ -91,8 +100,9 @@
         width: 40%;
     }
 }
-
-.modal-form input, select {
+  
+.modal-form input,
+select {
     width: 90%;
     height: 48px;
     padding: 0 1em;
@@ -102,8 +112,28 @@
     background-color: #ECF3FF;
 }
 
-::placeholder {
-    color:  #3d3e3eb6;
+input[type="date"]::before {
+    content: attr(placeholder);
+}
+
+input[type="date"] {
+    color: transparent;
+}
+
+::placeholder,
+input[type="date"]::before,
+input[type="date"]:focus,
+input[type="date"]:valid {
+    color: #3d3e3eb6;
+}
+
+input[type="date"]:focus::before,
+input[type="date"]:valid::before {
+    content: "" !important;
+}
+
+::placeholder,
+input[type="date"]::before {
     opacity: 0.4;
     text-align: justify;
 }
@@ -120,7 +150,8 @@
 }
 
 @media screen and (min-width: 800px) {
-    .modal-form input, select {
+    .modal-form input,
+    select {
         width: 100%;
     }
 

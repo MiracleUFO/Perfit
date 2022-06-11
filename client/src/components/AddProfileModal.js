@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Logo from './Logo';
+import Loader from './Loader';
 
 import { close } from '../helpers/modalLogic';
 import baseUrl from '../helpers/baseUrl';
-import { EMAIL_PATTERN } from '../constants';
 
-import '../styles/css/Modal.css';
+import '../styles/Modal.css';
 
 const AddProfileModal = () => {
-    const [state, setState] = useState({
+    const initialState = {
         email: '',
         firstName: '',
         lastName: '',
@@ -20,17 +20,27 @@ const AddProfileModal = () => {
         country: '',
         keySkill: '',
         profilePicture: '',
-        responseText: ''
-    });
+        successText: '',
+        failureText: '',
+        loading: false
+    }
+
+    const [state, setState] = useState({...initialState});
 
     const location = useLocation();
+
+    const closeModal = () => {
+        close();
+        setState({...initialState});
+    }
 
     const handleChange = (e) => {
         setState({...state, [e.target.name]: e.target.value});
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
+        setState({...state, loading: true});
+
         const {
             email,
             firstName,
@@ -53,23 +63,36 @@ const AddProfileModal = () => {
             keySkill,
             profilePicture
         }
+
         const url = baseUrl();
-        axios.post(url, user)
-            .then(res => setState({...state, responseText: res}))
+        axios.post(`${url}/api/users`, user)
+            .then(res => {
+                const newState = {...initialState, successText: res.data.message};
+                setState({...newState});
+                setTimeout(() => closeModal(), 1500);
+            })
+            .catch(err => {
+                const newState = {...initialState, failureText: err.response.data.error || 'Failed to sign up. Try again.'};
+                setState({...newState});
+            })
     }
 
     const disableFutureDates = () => {
         const today = new Date();
-        let dd, mm, yy;
-        dd = today.getDate() + 1;
-        mm = today.getMonth() + 1;
-        yy = today.getFullYear();
-        const formattedDate = `${yy}-${mm}-${dd}`;
-        return formattedDate;
-    }
+        const year = today.getFullYear();
+        let date, month;
+        date = today.getDate();
+        month = today.getMonth() + 1;
 
-    const closeModal = () => {
-        close();
+        if (month < 9) {
+            month = `0${month}`
+        }
+        if (date < 9) {
+            date = `0${date}`
+        }
+        
+        const formattedDate = `${year}-${month}-${date}`;
+        return formattedDate;
     }
     
       return (
@@ -84,75 +107,90 @@ const AddProfileModal = () => {
                         Hey Stranger! Join our community.
                     </p>
         
-                    <form onSubmit={handleSubmit}>
-                        <input 
+                    <div className='form'>
+                        {state.loading ? 
+                            <Loader /> : ''
+                        }
+                        <input
+                            required
                             placeholder='First Name' 
-                            required name='firstName' 
+                            name='firstName' 
                             value={state.firstName} 
                             onChange={handleChange}
                         />
-                        <input 
+                        <input
+                            required
                             placeholder='Last Name' 
-                            required name='lastName' 
+                            name='lastName' 
                             value={state.lastName} 
                             onChange={handleChange}
                         />
-                        <input 
+                        <input
+                            required
                             placeholder='Email Address'
-                            required name='email'
-                            type='email' value={state.email}
-                            pattern={EMAIL_PATTERN}
+                            name='email'
+                            type='email' 
+                            value={state.email}
                             onChange={handleChange}
                         />
-                        <input type="date" id="datemin" name="datemin" min="2000-01-02" />
                         <div className='input-flex-container'>
-                            <input 
+                            <input
+                                required
                                 placeholder='Occupation' 
-                                required name='occupation' 
+                                name='occupation' 
                                 value={state.occupation} 
                                 onChange={handleChange}
                             />
-                            <input 
+                            <input
+                                required
                                 placeholder='Key skill' 
-                                required name='keySkill' 
+                                name='keySkill' 
                                 value={state.keySkill} 
                                 onChange={handleChange}
                             />
                         </div>
                         <div className='input-flex-container'>
                             <input 
+                                required
                                 placeholder='State' 
-                                required name='state' 
+                                name='state' 
                                 value={state.state} 
                                 onChange={handleChange}
                             />
-                            <input 
+                            <input
+                                required
                                 placeholder='Country' 
-                                required name='country' 
+                                name='country' 
                                 value={state.country} 
                                 onChange={handleChange}
                             />
                         </div>
                         <div className='input-flex-container'>
                             <input
+                                required
                                 type='date'
-                                max={disableFutureDates()}
-                                placeholder='Date of birth' 
-                                required name='dob' 
+                                placeholder="DOB"
+                                title='Pick your date of birth'
+                                name='dob'
                                 value={state.dob} 
                                 onChange={handleChange}
+                                max={disableFutureDates()}
                             />
-                            <input 
+                            <input
+                                required 
                                 placeholder='Profile picture url' 
-                                required name='profilePicture' 
+                                name='profilePicture' 
                                 value={state.profilePicture} 
                                 onChange={handleChange}
                             />
                         </div>
-                        <button>Join</button>
-                    </form>
+                        <button onClick={handleSubmit}>Join</button>
+                    </div>
         
-                    <p>{state.responseText}</p>
+                    <p>
+                        <span className='success-text'>{state.successText}</span>
+                        <span className='failure-text'>{state.failureText}</span>
+                    </p>
         
                     <p className='have-account-text'>
                         Already have account?
@@ -168,7 +206,7 @@ const AddProfileModal = () => {
                 <img 
                     className='section-img'
                     src='https://www.publicbooks.org/wp-content/uploads/2022/05/arthur-mazi-a8CxRWIu8yw-unsplash-e1651170357711-810x522.jpg'
-                    alt='Black woman holding sparkling lights.'
+                    alt='Blue sky and rooftop'
                 />
 
                 <p className='close-icon' onClick={closeModal}>

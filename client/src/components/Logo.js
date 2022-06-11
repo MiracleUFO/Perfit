@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import LogoIcon from '../assets/images/logo-icon.png';
-import '../styles/css/Logo.css';
+import '../styles/Logo.css';
 
 const Logo = ({ onClick }) => (
     <NavLink 

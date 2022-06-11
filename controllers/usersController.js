@@ -100,7 +100,7 @@ const addNewUser = async (req, res, next) => {
     const user = await User.findOne({ email: email });
 
     if (user) {
-        next('User already exists.');
+        return res.status(409).send({error: 'User already exists'});
     } else {
         const formattedUser = {
             id: Math.ceil(Math.random() * 1000),
@@ -118,8 +118,8 @@ const addNewUser = async (req, res, next) => {
         formattedUser.id = await checkUserIdIsUnique(formattedUser.id);
 
         try {
-            const result = await createUser(formattedUser);
-            res.status(201).json(result);
+            await createUser(formattedUser);
+            res.status(201).json({status: 201, message: 'New user created.'});
         } catch (err) {
             next(err)
         }

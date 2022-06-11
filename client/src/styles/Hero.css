@@ -9,7 +9,8 @@
    }
 }
 
-.hero-main, .hero-other {
+.hero-main,
+.hero-other {
     margin-top: 75px;
     display: flex;
     flex-direction: column;
