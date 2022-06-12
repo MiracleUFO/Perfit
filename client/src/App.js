@@ -1,5 +1,6 @@
 import { Switch, Route, useLocation } from 'react-router';
-import Home from './components/Home';
+import Home from './screens/Home';
+import User from './screens/User';
 import './App.css';
 
 const App = () => {
@@ -10,9 +11,10 @@ const App = () => {
     <div>
       <Switch location={background || location}>
         <Route exact path='/' component={Home} />
+        <Route path='/user' component={User} />
       </Switch>
     </div>
   );
-}
+};
 
 export default App;

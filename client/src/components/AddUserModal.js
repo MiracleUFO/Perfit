@@ -23,7 +23,7 @@ const AddProfileModal = () => {
         successText: '',
         failureText: '',
         loading: false
-    }
+    };
 
     const [state, setState] = useState({...initialState});
 
@@ -32,11 +32,11 @@ const AddProfileModal = () => {
     const closeModal = () => {
         close();
         setState({...initialState});
-    }
+    };
 
     const handleChange = (e) => {
         setState({...state, [e.target.name]: e.target.value});
-    }
+    };
 
     const handleSubmit = () => {
         setState({...state, loading: true});
@@ -62,7 +62,7 @@ const AddProfileModal = () => {
             country,
             keySkill,
             profilePicture
-        }
+        };
 
         const url = baseUrl();
         axios.post(`${url}/api/users`, user)
@@ -74,8 +74,8 @@ const AddProfileModal = () => {
             .catch(err => {
                 const newState = {...initialState, failureText: err.response.data.error || 'Failed to sign up. Try again.'};
                 setState({...newState});
-            })
-    }
+            });
+    };
 
     const disableFutureDates = () => {
         const today = new Date();
@@ -85,21 +85,21 @@ const AddProfileModal = () => {
         month = today.getMonth() + 1;
 
         if (month < 9) {
-            month = `0${month}`
+            month = `0${month}`;
         }
         if (date < 9) {
-            date = `0${date}`
+            date = `0${date}`;
         }
         
         const formattedDate = `${year}-${month}-${date}`;
         return formattedDate;
-    }
+    };
     
-      return (
+    return (
         <section id='modal-wrapper-add-profile' onClick={closeModal}>
             <div id='modal-hidden-add-profile' className='modal-hidden' onClick={e => e.stopPropagation()}>
                 <div className='modal-form'>
-                    <section className="brand-wrapper">
+                    <section className='brand-wrapper'>
                         <Logo onClick={closeModal} />
                     </section>
         
@@ -108,8 +108,11 @@ const AddProfileModal = () => {
                     </p>
         
                     <div className='form'>
-                        {state.loading ? 
-                            <Loader /> : ''
+                        {state.loading 
+                            ?   <div className='loader-container-holder loader-container-add-holder'>
+                                    <Loader />
+                                </div>
+                            :   ''
                         }
                         <input
                             required
@@ -169,7 +172,7 @@ const AddProfileModal = () => {
                             <input
                                 required
                                 type='date'
-                                placeholder="DOB"
+                                placeholder='DOB'
                                 title='Pick your date of birth'
                                 name='dob'
                                 value={state.dob} 
@@ -214,7 +217,7 @@ const AddProfileModal = () => {
                 </p>
             </div>
         </section>
-      );
-}
+    );
+};
 
 export default AddProfileModal;

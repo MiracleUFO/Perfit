@@ -1,0 +1,250 @@
+.user-info {
+    width: 95vw;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.user-info header {
+    margin-top: 25px;
+    height: 20vh;
+    background-color: #8EC5FC;
+    background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+    border-radius: 10px 10px 0 0;
+}
+
+p {
+    color: #3d3e3eb6;
+    line-height: 27px;
+}
+
+@media screen and (min-width: 800px) {
+    .user-info {
+        width: 89vw;
+        min-height: 100vh;
+    }
+
+    .user-info header {
+        height: 34vh;
+    }
+}
+
+.content {
+    background: aliceblue;
+    border-radius: 20px;
+    min-height: 60vh;
+    position: relative;
+    top: -1.2vh;
+}
+
+.content-intro, .user-name-container {
+    display: flex;
+    position: relative;
+}
+
+.content-intro {
+    flex-direction: column;
+    position: relative;
+    top: -5vh;
+}
+
+.content-intro h1, .about h2, .location h3 {
+    color: rgb(56, 53, 53);
+    font-size: 1.8em;
+    line-height: 5px;
+}
+
+@media screen and (min-width: 800px) {
+    .content {
+        border-radius: 10px;
+        min-height: 80vh;
+    }
+
+    .content-intro {
+        flex-direction: row;
+        top: 0;
+    }
+
+    .content-intro h1 {
+        font-size: 2em;
+    }
+}
+
+.avatar-container {
+    position: relative;
+    left: 1%;
+    box-shadow: 5px 5px 5px 3px rgba(0,0,0,0.06);
+}
+
+.avatar-container, .avatar-container-small {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: aliceblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar-container-small {
+    width: 95%;
+    height: calc(120px - 5%);
+    background-color: #D9D5CC;
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 80%;
+}
+
+.user-name-container {
+    margin-left: 20px;
+    margin-top: 10px;
+    width: calc(100% - 120px);
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(220, 220, 220, 0.5);
+}
+
+.edit-box {
+    cursor: pointer;
+    padding: 8px 20px;
+    border-radius: 5px;
+    color: rgb(56, 53, 53);
+    font-size: 0.8em;
+    font-weight: bold;
+    border: 2px solid rgba(220, 220, 220);
+    box-shadow: 1.5px 3.5px 3px 1px rgba(0,0,0,0.06);
+    display: none;
+}
+
+.edit-icon {
+    cursor: pointer;
+    width: 2em;
+    fill: transparent;
+    position: absolute;
+    left: 85vw;
+    top: 6vh;
+}
+
+@media screen and (min-width: 800px) {
+    .avatar-container {
+        width: 200px;
+        height: 200px;
+        top: -10vh;
+        left: 20px;
+    }
+
+    .avatar-container-small {
+        height: calc(200px - 5%); 
+    }
+
+    .edit-box {
+        display: block;
+    }
+
+    .edit-icon {
+        display: none;
+    }
+
+    .user-name-container {
+        width: 70%;
+        height: 130px;
+        margin-left: 3.5%;
+        position: relative;
+        top: -0.8vh;
+        margin-top: revert;
+    }    
+}
+
+.about {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
+    position: relative;
+    top: -4vh;
+}
+
+.about h2, .location h3 {
+    font-size: 1.5em;
+}
+
+.about p {
+    color: rgba(56, 53, 53, 0.7);
+}
+
+.about p:first-of-type {
+    padding-top: 10px;
+}
+
+.about span {
+    color: #878CD4;
+    display: block;
+    margin-top: 35px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.location {
+    padding-top: 40px;
+}
+
+.location img {
+    width: 8%;
+    padding-right: 4px;
+}
+
+.location h3 {
+    color: rgba(56, 53, 53, 0.8);
+    font-size: 1em;
+}
+
+.location p {
+    color: rgb(56, 53, 53);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (min-width: 800px) {
+    .about {
+        flex-direction: row;
+    }
+
+    .about > div:first-child {
+        width: 50%;
+        margin-right: 20%;
+    }
+
+    .location {
+        padding-top: 0;
+    }
+}
+
+.loader-container-add-holder, .loader-container-edit-holder {
+    position: absolute;
+    height: 400px;
+}
+
+.loader-container-edit-holder {
+    height: 350px;
+}
+
+.loader-container-larger {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+}
+
+.loader-container-larger img {
+    width: 60%;
+}
+
+@media screen and (min-width: 800px) {
+    .loader-container-larger img {
+        width: 30%;
+    } 
+}

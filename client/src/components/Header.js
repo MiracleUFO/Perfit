@@ -11,14 +11,14 @@ const Header = () => {
             <nav>
                 <Logo />
                 <Link 
-                    to={{ pathname: "", state: { background: location }}}
+                    to={{ pathname: '', state: { background: location }}}
                     onClick={displayAddProfileModal}
                 >
                     Join Community
                 </Link>
             </nav>
         </header>
-    )
-}
+    );
+};
 
 export default Header;

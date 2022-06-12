@@ -12,13 +12,13 @@ const Hero = () => {
         left: 100,
         behavior: 'smooth'
         });
-    }
+    };
 
     return (
         <div className='hero-container'>
             <div className='hero-main'>
                 <h1>
-                    Your next role's best fit,<br />
+                    Your next role&apos;s best fit,<br />
                     here on perfit.
                 </h1>
                 <p>
@@ -43,7 +43,7 @@ const Hero = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Hero;

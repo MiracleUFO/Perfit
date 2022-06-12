@@ -198,3 +198,14 @@ input[type="date"]::before {
         display: inline;
     }
 }
+
+.loader-container-holder {
+    height: 405px;
+    width: 90%;
+}
+
+@media screen and (min-width: 800px) {
+    .loader-container-holder {
+        width: 42%;
+    }
+}

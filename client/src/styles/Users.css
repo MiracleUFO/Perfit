@@ -31,6 +31,18 @@
 .user-container {
     width: 90%;
     height: max-content;
+    display: inline-block;
+    margin-right: 3%;
+}
+
+.user:hover {
+    transition-delay: 0.5s;
+    transition-timing-function: ease-in-out;
+    transform: scale(1.08) perspective(1px);
+    box-shadow: 3px 8px 3px 4px rgba(0,0,0,0.06);
+}
+
+.user {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
@@ -40,16 +52,19 @@
     margin: 0 auto;
     margin-bottom: 50px;
     cursor: pointer;
-    box-shadow: 2px 5px 3px 4px rgba(0,0,0,0.06);
     border: 2px solid rgba(135, 140, 212, 0.4);
     text-align: center;
     position: relative;
+    min-height: 176.65px;
+    box-shadow: 2px 5px 3px 4px rgba(0,0,0,0.06);
 }
 
 @media screen and (min-width: 800px) {
     .user-container {
-        flex-direction: row;
         width: 29%;
+    }
+    .user {
+        flex-direction: row;
         margin: revert;
         margin-right: 3%;
         margin-bottom: 100px;
@@ -58,14 +73,7 @@
     }
 }
 
-.user-container:hover {
-    transition-delay: 0.5s;
-    transition-timing-function: ease-in-out;
-    transform: scale(1.08) perspective(1px);
-    box-shadow: 3px 8px 3px 4px rgba(0,0,0,0.06);
-}
-
-.user-container > img {
+.user > img {
     width: 50%;
 }
 

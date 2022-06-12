@@ -14,7 +14,7 @@ const Footer = () => {
             </div>
             <Logo />
 		</footer>
-	)
-}
+	);
+};
 
 export default Footer;
