@@ -161,7 +161,7 @@ const EditProfileModal = ({ id, name }) => {
                 <img 
                     className='section-img'
                     src='https://w0.peakpx.com/wallpaper/281/219/HD-wallpaper-helicopter-sky-cloud-flight.jpg'
-                    alt='Blue sky and rooftop'
+                    alt='Blue sky and helicopter'
                 />
 
                 <p className='close-icon' onClick={closeModal}>
