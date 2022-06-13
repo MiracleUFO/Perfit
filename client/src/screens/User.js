@@ -93,7 +93,10 @@ const User = () => {
                                             My name is {userInfo.firstName} {userInfo.lastName}.
                                             I&apos;m a(n) {userInfo.occupation} based in {userInfo.state}, {userInfo.country}.
                                         </p>
-                                        <p>I specialise in {userInfo.keySkill}.</p>
+                                        <p>
+                                            I specialise in {userInfo.keySkill}.
+                                            <span className='more'>..</span>
+                                        </p>
                                         <span>Hire me</span>
                                     </div>
 

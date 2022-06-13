@@ -88,7 +88,6 @@
 
 .modal-form {
     width: 80%;
-    height: 650px;
     overflow-y: scroll;
     overflow-x: hidden;
     margin: 0 auto;
@@ -98,6 +97,7 @@
 @media screen and (min-width: 800px) {
     .modal-form {
         width: 40%;
+        height: 650px;
     }
 }
   

@@ -34,15 +34,35 @@ const createUser = async (data) => {
 
 const getUsers = async (req, res) => {
     User.find({})
-        .then(users => res.send(users));
+        .then(users => res.status(200).send(users));
 }
 
 const getUser = async (req, res) => {
     const {id } = req.params;
     User.findOne({ id: id })
         .then(user => {
-            if (!user) return res.status(404).json({status: 404, message: 'User does not exist.'});
-            res.status(200).json(user);
+            if (!user) return res.status(404).send({status: 404, message: 'User does not exist.'});
+            const {  
+                firstName,
+                lastName,
+                occupation,
+                state,
+                country,
+                keySkill,
+                profilePicture
+            } = user;
+
+            const filteredUser = {
+                firstName,
+                lastName,
+                occupation,
+                state,
+                country,
+                keySkill,
+                profilePicture
+            }
+
+            res.status(200).json(filteredUser);
         });
 }
 
@@ -51,8 +71,6 @@ const editExistingUser = async (req, res, next) => {
     const { 
         firstName, 
         lastName,
-        dob,
-        email,
         state,
         country,
         occupation,
@@ -60,25 +78,30 @@ const editExistingUser = async (req, res, next) => {
         profilePicture
     } = req.body;
 
-    validator(req, res);
-
-    User.findOneAndReplace({ id: id }, {
-        id,
-        firstName,
+    const filteredInfo = {
+        firstName, 
         lastName,
-        dob,
         state,
         country,
-        email,
         occupation,
         keySkill,
         profilePicture
+    };
+
+    for (const key in filteredInfo) {
+        if (filteredInfo[key] === '') {
+          delete filteredInfo[key];
+        }
+    }
+
+    User.findOneAndUpdate({ id: id }, {
+        ...filteredInfo
     }, {
         new: true
     }, (err, user) => {
+        if (!user) return res.status(404).send({error: 'User does not exist.'});
         if (err) return next(err);
-        if (!user) return res.status(404).json({status: 404, message: 'User does not exist.'});
-        res.status(200).json(user);
+        res.status(204).json(user);
     });
 }
 
@@ -100,7 +123,7 @@ const addNewUser = async (req, res, next) => {
     const user = await User.findOne({ email: email });
 
     if (user) {
-        return res.status(409).send({error: 'User already exists'});
+        return res.status(409).send({error: 'User already exists.'});
     } else {
         const formattedUser = {
             id: Math.ceil(Math.random() * 1000),
