@@ -39,6 +39,8 @@ const AddProfileModal = () => {
     };
 
     const handleSubmit = () => {
+        const url = baseUrl();
+
         setState({...state, loading: true});
 
         const {
@@ -64,7 +66,6 @@ const AddProfileModal = () => {
             profilePicture
         };
 
-        const url = baseUrl();
         axios.post(`${url}/api/users`, user)
             .then(res => {
                 const newState = {...initialState, successText: res.data.message};
@@ -107,7 +108,7 @@ const AddProfileModal = () => {
                         Hey Stranger! Join our community.
                     </p>
         
-                    <div className='form'>
+                    <form className='form' onSubmit={handleSubmit}>
                         {state.loading 
                             ?   <div className='loader-container-holder loader-container-add-holder'>
                                     <Loader />
@@ -187,8 +188,8 @@ const AddProfileModal = () => {
                                 onChange={handleChange}
                             />
                         </div>
-                        <button onClick={handleSubmit}>Join</button>
-                    </div>
+                        <button>Join</button>
+                    </form>
         
                     <p>
                         <span className='success-text'>{state.successText}</span>

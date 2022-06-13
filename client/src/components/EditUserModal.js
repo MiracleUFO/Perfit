@@ -5,6 +5,7 @@ import Logo from './Logo';
 import Loader from './Loader';
 
 import { close } from '../helpers/modalLogic';
+import { isEmpty } from '../helpers/validate';
 import baseUrl from '../helpers/baseUrl';
 
 
@@ -35,14 +36,10 @@ const EditProfileModal = ({ id, name }) => {
         setState({...state, [e.target.name]: e.target.value});
     };
 
-    const validate = () => {
-        const isEmpty = Object.values(state).every(x => (x === false || x === ''));
-        return !isEmpty;
-    };
-
+    
     const handleSubmit = () => {
         const url = baseUrl();
-        const valid = validate();
+        const valid = isEmpty(state);
 
         if (valid) {
             setState({...state, loading: true});
@@ -99,7 +96,7 @@ const EditProfileModal = ({ id, name }) => {
                         Hey {name}! Edit your profile.
                     </p>
         
-                    <div className='form'>
+                    <div>
                         {state.loading 
                             ?   <div className='loader-container-holder loader-container-edit-holder'>
                                     <Loader />
