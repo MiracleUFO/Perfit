@@ -27,7 +27,8 @@
 
 @media screen and (min-width: 800px) {
     .hero-main > h1 {
-        font-size: 3.8em;
+        font-size: 4em;
+        letter-spacing: 1.5px;
         line-height: revert;
     }    
 }
