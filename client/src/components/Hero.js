@@ -6,12 +6,14 @@ import '../styles/Hero.css';
 
 const Hero = () => {
     const scrollDown = () => {
-        const top = document.getElementById('users-container').getBoundingClientRect().top + window.scrollY - 200;
-        window.scroll({
-        top: top,
-        left: 100,
-        behavior: 'smooth'
-        });
+        if (document.readyState === 'complete') {
+            const top = document.getElementById('users-container').getBoundingClientRect().top + window.scrollY - 200;
+            window.scroll({
+                top: top,
+                left: 100,
+                behavior: 'smooth'
+            }); 
+        }
     };
 
     return (
@@ -30,7 +32,7 @@ const Hero = () => {
                     A great place to find the best fits for your company. <br />
                     Delivery at the click of a button.
                 </p>
-                <button onClick={scrollDown}>
+                <button id='scroll-down-btn' onClick={scrollDown}>
                     See freelancers →
                 </button>
             </div>
