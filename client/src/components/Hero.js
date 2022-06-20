@@ -19,11 +19,16 @@ const Hero = () => {
             <div className='hero-main'>
                 <h1>
                     Your next role&apos;s best fit,<br />
-                    here on perfit.
+                    here on
+                    <div className='perfit-name'>
+                        <span>
+                            perfit.
+                        </span>
+                    </div>
                 </h1>
                 <p>
                     A great place to find the best fits for your company. <br />
-                    Delivered at the click of a button.
+                    Delivery at the click of a button.
                 </p>
                 <button onClick={scrollDown}>
                     See freelancers →

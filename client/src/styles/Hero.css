@@ -9,6 +9,11 @@
    }
 }
 
+.hero-main {
+    width: 90vw;
+    margin: 75px auto;  
+}
+
 .hero-main,
 .hero-other {
     margin-top: 75px;
@@ -20,22 +25,62 @@
 }
 
 .hero-main > h1 {
-    font-size: 3.2em;
+    font-size: 2em;
     margin-bottom: 10px;
-    line-height: 63px;
+    line-height: 45px;
 }
 
 @media screen and (min-width: 800px) {
     .hero-main > h1 {
         font-size: 4em;
-        letter-spacing: 1.5px;
-        line-height: revert;
+        letter-spacing: 1.8px;
+        line-height: 75px;
     }    
 }
 
 .hero-main > p {
-   color: #3d3e3eb6;
-   line-height: 27px;
+    color: #455065;
+    line-height: 28px;
+    word-spacing: 2px;
+    font-size: 14px;
+}
+
+@media screen and (min-width: 800px) {
+    .hero-main > p {
+        font-size: 18px;
+    }
+}
+
+.perfit-name {
+    display: inline-block;
+    border-bottom: 3px solid #8D5FD3;
+    line-height: 26px;
+    border-bottom-right-radius: 2.5px;
+    border-bottom-left-radius: 2.5px;
+    left: 15px;
+}
+
+.perfit-name,
+.perfit-name > span {
+    position: relative;
+}
+
+.perfit-name > span {
+    right: 7px;
+}
+
+@media  screen and (min-width: 800px) {
+    .perfit-name {
+        border-bottom-width: 5.5px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        line-height: 52px;
+        left: 30px;
+    }
+    
+    .perfit-name > span {
+        right: 12px;
+    }
 }
 
 .hero-main button {
