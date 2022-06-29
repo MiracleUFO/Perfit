@@ -2,18 +2,14 @@ import { FaDiscord, FaMediumM } from 'react-icons/fa';
 import { BsTwitter, BsSlack } from 'react-icons/bs';
 import { ImHackernews } from 'react-icons/im';
 
+import scrollDown from '../helpers/scrollDown';
+
 import '../styles/Hero.css';
 
 const Hero = () => {
-    const scrollDown = () => {
-        if (document.readyState === 'complete') {
-            const top = document.getElementById('users-container').getBoundingClientRect().top + window.scrollY - 200;
-            window.scroll({
-                top: top,
-                left: 100,
-                behavior: 'smooth'
-            }); 
-        }
+    const scrollToSection = () => {
+        const top = document.getElementById('users-container').getBoundingClientRect().top + window.scrollY - 70;
+        scrollDown(top);
     };
 
     return (
@@ -32,7 +28,7 @@ const Hero = () => {
                     A great place to find the best fits for your company. <br />
                     Delivery at the click of a button.
                 </p>
-                <button id='scroll-down-btn' onClick={scrollDown}>
+                <button id='scroll-down-btn' onClick={scrollToSection}>
                     See freelancers →
                 </button>
             </div>

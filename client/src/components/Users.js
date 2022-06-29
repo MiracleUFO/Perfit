@@ -16,9 +16,9 @@ const Users = () => {
     },  []);
 
     return (
-        <div className='container'>
+        <div id='users-container' className='container'>
             <h1>Freelancer Profiles 🤖</h1>
-            <div id='users-container'>
+            <div>
                 {users.map(user =>
                     <Link
                         className='user-container'

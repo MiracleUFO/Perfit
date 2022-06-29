@@ -24,6 +24,7 @@ p {
     }
 
     .user-info header {
+        margin-top: 45px;
         height: 34vh;
     }
 }
@@ -99,7 +100,9 @@ p {
 
 .avatar {
     border-radius: 50%;
-    width: 80%;
+    width: 114px;
+    height: 114px;
+    background-size: cover;
 }
 
 .user-name-container {
@@ -142,6 +145,11 @@ p {
 
     .avatar-container-small {
         height: calc(200px - 5%); 
+    }
+
+    .avatar {
+        width: 152px;
+        height: 152px;
     }
 
     .edit-box {
@@ -237,15 +245,6 @@ p {
     .location {
         padding-top: 0;
     }
-}
-
-.loader-container-add-holder, .loader-container-edit-holder {
-    position: absolute;
-    height: 400px;
-}
-
-.loader-container-edit-holder {
-    height: 350px;
 }
 
 .loader-container-larger {

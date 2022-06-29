@@ -1,6 +1,6 @@
 const User = require('../models/users');
 
-const validator = (req, res) => {
+const validator = (req) => {
     const { 
         firstName, 
         lastName,
@@ -13,9 +13,7 @@ const validator = (req, res) => {
         profilePicture
     } = req.body;
 
-    if (!(firstName && lastName && dob && email && state && country && occupation && keySkill && profilePicture)) {
-        return res.status(400).json({status: 400, message: 'Required fields not sent'});
-    }
+    return (!(firstName && lastName && dob && email && state && country && occupation && keySkill && profilePicture));
 }
 
 const checkUserIdIsUnique = async (id) => {
@@ -32,5 +30,5 @@ const checkUserIdIsUnique = async (id) => {
 
 module.exports = {
     validator,
-    checkUserIdIsUnique
+    checkUserIdIsUnique,
 }

@@ -1,5 +1,5 @@
 const User = require('../models/users');
-const { validator, checkUserIdIsUnique }= require('../helpers/userValidator');
+const { validator, checkUserIdIsUnique } = require('../helpers/userValidator');
 
 const createUser = async (data) => {
     const {
@@ -41,7 +41,7 @@ const getUser = async (req, res) => {
     const {id } = req.params;
     User.findOne({ id: id })
         .then(user => {
-            if (!user) return res.status(404).send({status: 404, message: 'User does not exist.'});
+            if (!user) return res.status(404).send({status: 404, error: 'User does not exist.'});
             const {  
                 firstName,
                 lastName,
@@ -99,9 +99,9 @@ const editExistingUser = async (req, res, next) => {
     }, {
         new: true
     }, (err, user) => {
-        if (!user) return res.status(404).send({error: 'User does not exist.'});
+        if (!user) return res.status(404).json({status: 404, error: 'User does not exist.'});
         if (err) return next(err);
-        res.status(204).json(user);
+        return res.status(204).json(user);
     });
 }
 
@@ -118,7 +118,9 @@ const addNewUser = async (req, res, next) => {
         profilePicture
     } = req.body;
 
-    validator(req, res);
+    if (validator(req)) {
+        return res.status(400).json({status: 400, error: 'Required fields not sent.'});
+    }
 
     const user = await User.findOne({ email: email });
 
@@ -142,7 +144,7 @@ const addNewUser = async (req, res, next) => {
 
         try {
             await createUser(formattedUser);
-            res.status(201).json({status: 201, message: 'New user created.'});
+            return res.status(201).json({status: 201, message: 'New user created.'});
         } catch (err) {
             next(err)
         }
