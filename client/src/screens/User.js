@@ -11,8 +11,9 @@ import { displayEditProfileModal } from '../helpers/modalLogic';
 import baseUrl from '../helpers/baseUrl';
 
 import { TbEditCircle } from 'react-icons/tb';
-
 import CountryIcon from '../assets/images/country-icon.png';
+
+import 'animate.css';
 import '../styles/User.css';
 
 const User = () => {
@@ -61,7 +62,7 @@ const User = () => {
                                     <div className='avatar-container'>
                                         <div className='avatar-container-small'>
                                             <img 
-                                                className='avatar'
+                                                className='avatar animate__animated animate__fadeInRight animate__fast'
                                                 src={userInfo.profilePicture}
                                                 alt='User&apos;s avatar'
                                             />
@@ -73,12 +74,12 @@ const User = () => {
                                     </div>
 
                                     <div className='user-name-container'>
-                                        <div>
+                                        <div className='animate__animated animate__fadeInRight'>
                                             <h1>{userInfo.firstName} {userInfo.lastName}</h1>
                                             <p>I&apos;m a(n) {userInfo.occupation} based in {userInfo.state}.</p>
                                         </div>
                                         <div 
-                                            className='edit-box'
+                                            className='edit-box animate__animated animate__fadeInUp'
                                             onClick={displayEditProfileModal}
                                         >
                                             Edit
@@ -87,7 +88,7 @@ const User = () => {
                                 </section>
 
                                 <section className='about'>
-                                    <div>
+                                    <div className='animate__animated animate__fadeInUp'>
                                         <h2>About Me</h2>
                                         <p>
                                             My name is {userInfo.firstName} {userInfo.lastName}.
@@ -100,7 +101,7 @@ const User = () => {
                                         <span>Hire me</span>
                                     </div>
 
-                                    <div className='location'>
+                                    <div className='location animate__animated animate__fadeInRight'>
                                         <h3>Location</h3>
                                         <p>
                                             <img src={CountryIcon} alt='globe icon' />

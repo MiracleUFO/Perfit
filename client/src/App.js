@@ -1,7 +1,6 @@
 import { Switch, Route, useLocation } from 'react-router';
 import Home from './screens/Home';
 import User from './screens/User';
-import './App.css';
 
 const App = () => {
   const location = useLocation();

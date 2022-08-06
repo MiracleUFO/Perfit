@@ -4,6 +4,7 @@ import { ImHackernews } from 'react-icons/im';
 
 import scrollDown from '../helpers/scrollDown';
 
+import 'animate.css';
 import '../styles/Hero.css';
 
 const Hero = () => {
@@ -15,7 +16,7 @@ const Hero = () => {
     return (
         <div className='hero-container'>
             <div className='hero-main'>
-                <h1>
+                <h1 className='animate__animated animate__backInDown'>
                     Your next role&apos;s best fit,<br />
                     here on
                     <div className='perfit-name'>
@@ -24,7 +25,7 @@ const Hero = () => {
                         </span>
                     </div>
                 </h1>
-                <p>
+                <p className=' animate__animated animate__fadeIn animate__slow animate__delay-1s'>
                     A great place to find the best fits for your company. <br />
                     Delivery at the click of a button.
                 </p>
