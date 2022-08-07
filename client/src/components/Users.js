@@ -37,13 +37,11 @@ const Users = () => {
             userCards = Array.from(usersContainer.getElementsByClassName('user-card')),
             h1 = usersContainer.getElementsByTagName('h1')[0]
         ;
-        console.log('hey me');
         if (isInViewport(usersContainer)) {
             h1.classList.add(...animatedClassesForHeader);
             for (let i = 0; i < userCards.length; i++) {
                 userCards[i].classList.add(...animatedClassesForUsers);
                 userCards[i].style.opacity = 1;
-                //console.log('hey me');
             }
         } else {
             h1.classList.remove(...animatedClassesForHeader);
