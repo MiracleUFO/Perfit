@@ -15,10 +15,21 @@ const Users = () => {
         const url = baseUrl();
         axios.get(`${url}/api/users`)
             .then(res => setUsers(res.data));
-    },  []);
+    }, []);
 
-    // Slide in when container is in view
-    window.addEventListener('scroll', () => {
+    useEffect(() => {
+        if (users.length) {
+            slideInAnimationUsersContainer();
+            window.addEventListener('scroll', slideInAnimationUsersContainer);
+        }
+
+        return () => {
+            window.removeEventListener('scroll', slideInAnimationUsersContainer);
+        };
+    }, [users]);
+
+    // Slide in when user container is in view
+    const slideInAnimationUsersContainer = () => {
         const 
             usersContainer = document.getElementById('users-container'),
             animatedClassesForHeader = ['animate__animated', 'animate__fadeInRightBig'],
@@ -26,12 +37,13 @@ const Users = () => {
             userCards = Array.from(usersContainer.getElementsByClassName('user-card')),
             h1 = usersContainer.getElementsByTagName('h1')[0]
         ;
-
+        console.log('hey me');
         if (isInViewport(usersContainer)) {
             h1.classList.add(...animatedClassesForHeader);
             for (let i = 0; i < userCards.length; i++) {
                 userCards[i].classList.add(...animatedClassesForUsers);
                 userCards[i].style.opacity = 1;
+                //console.log('hey me');
             }
         } else {
             h1.classList.remove(...animatedClassesForHeader);
@@ -40,7 +52,7 @@ const Users = () => {
                 userCards[i].style.opacity = 0.5;
             }
         }
-    });
+    };
 
     return (
         <div id='users-container' className='container'>
