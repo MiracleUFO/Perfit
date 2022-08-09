@@ -26,6 +26,10 @@ footer input {
     padding: 25px 30px;
     width: 80%;
     border-radius: 3px;
+    outline: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 footer button {
