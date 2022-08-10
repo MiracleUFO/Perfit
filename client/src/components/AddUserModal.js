@@ -4,8 +4,8 @@ import axios from 'axios';
 import Logo from './Logo';
 import Loader from './Loader';
 
-import baseUrl from '../helpers/baseUrl';
 import { close } from '../helpers/modalLogic';
+import baseUrl from '../helpers/baseUrl';
 import createImageUrl from '../helpers/createImageUrl';
 import initialCaps from '../helpers/initialsCaps';
 

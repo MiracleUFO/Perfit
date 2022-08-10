@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import Logo from './Logo';
 import Loader from './Loader';
 
-import baseUrl from '../helpers/baseUrl';
 import { close } from '../helpers/modalLogic';
 import isEmpty from '../helpers/validate';
+import baseUrl from '../helpers/baseUrl';
 import createImageUrl from '../helpers/createImageUrl';
 import initialCaps from '../helpers/initialsCaps';
 

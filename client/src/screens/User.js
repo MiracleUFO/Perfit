@@ -10,13 +10,13 @@ import EditProfileModal from '../components/EditUserModal';
 import Loader from '../components/Loader';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Error from '../components/Error';
 
 import { TbEditCircle } from 'react-icons/tb';
 import CountryIcon from '../assets/images/country-icon.png';
 
 import 'animate.css';
 import '../styles/User.css';
-import Error from '../components/Error';
 
 const User = () => {
     const location = useLocation();
