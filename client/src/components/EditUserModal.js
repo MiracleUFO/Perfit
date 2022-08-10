@@ -65,28 +65,33 @@ const EditProfileModal = ({ id, name }) => {
             } = state;
 
             try {
-                const profilePicture = await createImageUrl(profilePictureUrl ||  profilePictureFile);
+                const profilePicture = (profilePictureUrl || JSON.stringify(profilePictureFile) !== '{}')
+                    ?   await createImageUrl(profilePictureUrl ||  profilePictureFile)
+                    :   ''
+                ;
 
-                if (profilePicture) {
-                    const user = {
-                        firstName,
-                        lastName,
-                        occupation,
-                        state: state.state,
-                        country,
-                        keySkill,
-                        profilePicture
-                    };
-                    axios.put(`${url}/api/users/${id}`, user)
-                        .then(() => {
-                            const newState = {...initialState, successText: 'User info edited successfully.'};
-                            setState({...newState});
-                        })
-                        .catch(err => {
-                            const newState = {...initialState, failureText: err.response.data.error || 'Failed to edit information. Try again.'};
-                            setState({...newState});
-                        });
-                }
+                console.log(profilePicture);
+
+                const user = {
+                    firstName,
+                    lastName,
+                    occupation,
+                    state: state.state,
+                    country,
+                    keySkill,
+                    profilePicture
+                };
+
+                axios.put(`${url}/api/users/${id}`, user)
+                    .then(() => {
+                        const newState = {...initialState, successText: 'User info edited successfully.'};
+                        setState({...newState});
+                    })
+                    .catch(err => {
+                        const newState = {...initialState, failureText: err.response.data.error || 'Failed to edit information. Try again.'};
+                        setState({...newState});
+                    })
+                ;
             } catch (err) {
                 setState({...state, profilePictureUrl: '', profilePictureFile: {}, loading: false, failureText: 'Profile picture not valid.'});
             }
@@ -95,8 +100,7 @@ const EditProfileModal = ({ id, name }) => {
 
     useEffect(() => {
         if (state.successText || state.failureText) {
-            const statusSection = document.getElementById('status-text-edit-modal');
-            statusSection.scrollIntoView({alignToTop: false, behavior: 'smooth'});
+            document.getElementById('status-text-edit-modal').scrollIntoView({alignToTop: false, behavior: 'smooth'});
         }
         if (state.successText) {
             setTimeout(() => {

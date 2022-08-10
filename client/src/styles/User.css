@@ -261,12 +261,16 @@ p {
     position: fixed;
 }
 
-.loader-container-larger img {
+.loader-container-larger > .loader-container {
     width: 60%;
 }
 
+.loader-container-larger img {
+    width: 100%;
+}
+
 @media screen and (min-width: 800px) {
-    .loader-container-larger img {
-        width: 30%;
-    } 
+    .loader-container-larger > .loader-container {
+        width: 27%;
+    }    
 }
