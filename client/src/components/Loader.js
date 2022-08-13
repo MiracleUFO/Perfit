@@ -1,4 +1,4 @@
-import LoaderGif from '../assets/images/loader.gif';
+import LoaderGif from '../assets/loader.gif';
 import '../styles/Loader.css';
 
 const Loader = () => (

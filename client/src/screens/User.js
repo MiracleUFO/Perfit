@@ -14,7 +14,7 @@ import Footer from '../components/Footer';
 import Error from '../components/Error';
 
 import { TbEditCircle } from 'react-icons/tb';
-import CountryIcon from '../assets/images/country-icon.png';
+import CountryIcon from '../assets/country-icon.png';
 
 import 'animate.css';
 import '../styles/User.css';

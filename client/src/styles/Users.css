@@ -20,6 +20,12 @@
     font-size: 1.8em;
 }
 
+.container > div {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 @media screen and (min-width: 800px) {
     .container {
         padding: 20px 2.7%;
@@ -73,6 +79,7 @@
 @media screen and (min-width: 800px) {
     .user-card {
         width: 29%;
+        min-width: 15vw;
     }
     .user {
         flex-direction: row;
