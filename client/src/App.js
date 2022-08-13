@@ -1,4 +1,7 @@
+import { UserProvider } from './context/userContext';
+import { ModalProvider } from './context/modalContext';
 import { Switch, Route, useLocation } from 'react-router';
+
 import Home from './screens/Home';
 import User from './screens/User';
 
@@ -7,12 +10,14 @@ const App = () => {
   const background = location.state && location.state.background;
 
   return (
-    <div>
-      <Switch location={background || location}>
-        <Route exact path='/' component={Home} />
-        <Route path='/user' component={User} />
-      </Switch>
-    </div>
+    <UserProvider>
+      <ModalProvider>
+        <Switch location={background || location}>
+          <Route exact path='/' component={Home} />
+          <Route path='/user' component={User} />
+        </Switch>
+      </ModalProvider>
+    </UserProvider>
   );
 };
 

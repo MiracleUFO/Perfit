@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
+require('mongoose-type-email');
 const Schema = mongoose.Schema;
-
-const emailSchema = require('./email').schema;
 
 const defaultSchema = {
     type: String,
@@ -15,23 +14,28 @@ const userSchema = new Schema({
         type: Number,
         required: true,
         unique: true,
-        default: 0,
+        default: 0
     },
     firstName: defaultSchema,
     lastName: defaultSchema,
-    dob: defaultSchema,
-    email: defaultSchema,
+    email: {
+        ...defaultSchema,
+        type: mongoose.SchemaTypes.Email,
+        unique: true,
+        lowercase: true,
+        correctTld: true
+    },
     state: defaultSchema,
     country: defaultSchema,
     occupation: defaultSchema,
     keySkill: defaultSchema,
     profilePicture: {
-        type: String,
+        ...defaultSchema,
         default: 'https://img.freepik.com/free-photo/happy-african-american-professional-manager-smiling-looking-camera-headshot-portrait_1163-5134.jpg'
     },
     created: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     },
 });
 

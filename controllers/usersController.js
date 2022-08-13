@@ -109,7 +109,6 @@ const addNewUser = async (req, res, next) => {
     const { 
         firstName, 
         lastName,
-        dob,
         email,
         state,
         country,
@@ -131,7 +130,6 @@ const addNewUser = async (req, res, next) => {
             id: Math.ceil(Math.random() * 1000),
             firstName, 
             lastName,
-            dob,
             email,
             state,
             country,

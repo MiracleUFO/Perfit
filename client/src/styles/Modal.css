@@ -240,6 +240,18 @@ input[type="date"]::before {
     }
 }
 
+.success-text, .failure-text {
+    font-weight: 400;
+}
+
+.success-text {
+    color: #1aa260;
+}
+
+.failure-text {
+    color: #b73239;
+}
+
 .loader-container-holder {
     width: 120%;
     height: 500px;

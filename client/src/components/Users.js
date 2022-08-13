@@ -67,7 +67,6 @@ const Users = () => {
                     >
                         <div className='user'>
                             <img src={user.profilePicture} alt={user.firstName} />
-
                             <div className='user-textbox'>
                                 <p className='main-text'>{user.firstName} {user.lastName}</p>
                                 <p>{user.occupation}</p>

@@ -3,7 +3,6 @@ const fetch = require('node-fetch');
 const db = require('../db/connection');
 const { createUser } = require('../controllers/usersController');
 
-
 const populate = async () => {
     if (process.env.NODE_ENV !== 'production') {
         mongoose.connection.collections['users'].drop();
@@ -54,6 +53,7 @@ const seed = async () => {
 const seedDatabase = async () => {
     try {
         await seed();
+        console.log('Seeded / re-initialised database.')
     } catch (err) {
         console.error(err);
     }

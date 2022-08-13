@@ -4,7 +4,6 @@ const validator = (req) => {
     const { 
         firstName, 
         lastName,
-        dob,
         email,
         state,
         country,
@@ -13,7 +12,7 @@ const validator = (req) => {
         profilePicture
     } = req.body;
 
-    return (!(firstName && lastName && dob && email && state && country && occupation && keySkill && profilePicture));
+    return (!(firstName && lastName && email && state && country && occupation && keySkill && profilePicture));
 }
 
 const checkUserIdIsUnique = async (id) => {
@@ -22,7 +21,7 @@ const checkUserIdIsUnique = async (id) => {
 
     if (user) {
         newId = Math.ceil(Math.random() * 1000);
-        checkIfIdIsUnique(newId);
+        checkUserIdIsUnique(newId);
     } else {
         return newId;
     }

@@ -4,6 +4,7 @@ const router = require('./routers/router');
 const cors = require('cors');
 const path = require('path');
 const db = require('./db/connection');
+const bodyParser = require('body-parser');
 require('dotenv').config({ path: './config.env' });
 
 const port = process.env.PORT || 8080;
@@ -11,6 +12,9 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(bodyParser.json({limit: '25mb'}));
+app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));
 
 app.use('/api/', router);
  

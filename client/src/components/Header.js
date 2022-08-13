@@ -1,18 +1,28 @@
 import { Link, useLocation} from 'react-router-dom';
+import { useModalContext } from '../context/modalContext';
+
 import Logo from './Logo';
-import { displayAddProfileModal } from '../helpers/modalLogic';
 
 import '../styles/Header.css';
 
 const Header = () => {
-    const location = useLocation();
+    const 
+        location = useLocation(),
+        { setType, setVisible } = useModalContext()
+    ;
+        
+    const displayAddUserForm = () => {
+        setVisible(true);
+        setType('add-user');
+    };
+
     return (
         <header>
             <nav>
                 <Logo />
                 <Link 
                     to={{ pathname: '', state: { background: location }}}
-                    onClick={displayAddProfileModal}
+                    onClick={displayAddUserForm}
                 >
                     Join Community
                 </Link>
