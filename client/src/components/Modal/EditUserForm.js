@@ -88,7 +88,10 @@ const EditProfileForm = () => {
                         setState({...newState});
                     })
                     .catch(err => {
-                        const newState = {...initialState, failureText: err.response.data.error || 'Failed to edit information. Try again.'};
+                        const newState = {
+                            ...initialState,
+                            failureText: err.response.data.error || 'Failed to edit information. Try again.'
+                        };
                         setState({...newState});
                     })
                 ;
