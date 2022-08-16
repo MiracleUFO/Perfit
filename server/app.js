@@ -18,25 +18,27 @@ app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));*/
 const usersRoutes = require('./routes/usersRoutes');
 const cloudinaryRoutes = require('./routes/cloudinaryRoutes');
 
-// Routes are defined
+// Base routes definition
 app.use('/api/users', usersRoutes);
 app.use('/api/cloudinary', cloudinaryRoutes);
  
 app.listen(port, () => {
-  if (db) {
-    console.log(`Server is running on port: ${port}`);
-  }
+  if (db) console.log(`Server is running on port: ${port}`);
 });
 
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-  app.use(express.static(path.join(__dirname, 'client', 'build')));
-  app.get('*', function (req, res) {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-  });
+if (
+    process.env.NODE_ENV === 'production' ||
+    process.env.NODE_ENV === 'staging'
+  ) {
+    app.use(express.static(path.join(__dirname, 'client', 'build')));
+
+    app.get('*', function (req, res) {
+      res.sendFile(path.resolve(__dirname, '../', 'client', 'build', 'index.html'));
+    });
 }
 
 app.use((req, res, next) => {
-  next('404 RouteNotFound. This is the end of the earth.');
+  next('404RouteNotFound. You\'re falling off the earth 😵‍💫.');
 });
 
 module.exports = app;
