@@ -32,7 +32,8 @@ const uploadImage = async (req, res, next) => {
             else {
                 res.status(201).json({status: 201, message: 'New image uploaded.', url: result.url});
             }
-    });
+    })
+    .catch(err => console.log(err));
 };
 
 module.exports = uploadImage;

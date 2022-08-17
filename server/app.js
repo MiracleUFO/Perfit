@@ -2,23 +2,21 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const path = require('path');
-const bodyParser = require('body-parser');
+const db = require('./services/dbConnection');
 require('dotenv').config({ path: './config.env' });
 
-const db = require('./services/connection');
-const port = process.env.PORT || 8080;
-
 app.use(cors());
-app.use(express.json());
+app.use(express.json({limit: '50mb', extended: true}));
 app.use(express.urlencoded({ extended: true }));
 
-/*app.use(bodyParser.json({limit: '25mb'}));
-app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));*/
+//  Port
+const port = process.env.PORT || 8080;
 
+//  Routers
 const usersRoutes = require('./routes/usersRoutes');
 const cloudinaryRoutes = require('./routes/cloudinaryRoutes');
 
-// Base routes definition
+//  Base paths
 app.use('/api/users', usersRoutes);
 app.use('/api/cloudinary', cloudinaryRoutes);
  
@@ -26,6 +24,7 @@ app.listen(port, () => {
   if (db) console.log(`Server is running on port: ${port}`);
 });
 
+//  Serve client side
 if (
   process.env.NODE_ENV === 'production' ||
   process.env.NODE_ENV === 'staging'
@@ -36,6 +35,7 @@ if (
     res.sendFile(path.resolve(__dirname, '../', 'client', 'build', 'index.html'));
   });
 }
+
 
 app.use((req, res, next) => {
   next('404RouteNotFound. You\'re falling off the earth 😵‍💫.');
