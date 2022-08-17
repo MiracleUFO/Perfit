@@ -240,7 +240,7 @@ input[type="date"]::before {
     }
 }
 
-.success-text, .failure-text {
+.success-text, .failure-text, .warning-text {
     font-weight: 400;
 }
 
@@ -248,8 +248,20 @@ input[type="date"]::before {
     color: #1aa260;
 }
 
+.warning-text {
+    color: #eed202;
+    font-size: 0.8em;
+    width: calc(90% + 2em);
+}
+
 .failure-text {
     color: #b73239;
+}
+
+@media screen and (min-width: 800px) {
+    .warning-text {
+        width: calc(100% + 2em);
+    }    
 }
 
 .loader-container-holder {

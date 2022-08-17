@@ -8,9 +8,10 @@ import Loader from '../Loader';
 import baseUrl from '../../helpers/baseUrl';
 import createImageUrl from '../../helpers/createImageUrl';
 import initialCaps from '../../helpers/initialsCaps';
+import isValidImageSet from '../../helpers/isValidImageSet';
 
 const AddProfileForm = () => {
-    const initialState = {
+    const initUserInfo = {
         email: '',
         firstName: '',
         lastName: '',
@@ -20,41 +21,61 @@ const AddProfileForm = () => {
         country: '',
         keySkill: '',
         profilePictureUrl: '',
+        profilePictureFile: {}
+    };
+
+    const initControls = {
         successText: '',
         failureText: '',
-        profilePictureFile: {},
+        pfpWarningText: '',
         loading: false,
     };
 
     const
-        [state, setState] = useState({...initialState}),
+        [userInfo, setUserInfo] = useState({...initUserInfo}),
+        [controls, setControls] = useState({...initControls}),
         { setVisible, setType, setLoading } = useModalContext(),
         location = useLocation()
     ;
 
     const closeModal = () => {
         setVisible(false);
-        setState({...initialState});
+        setUserInfo({...initUserInfo});
+        setControls({...initControls});
     };
 
+    //  Handles input changes besides file uploads
     const handleChange = (e) => {
         let value = e.target.type === 'text' ? initialCaps(e.target.value) : e.target.value;
-        setState({...state, [e.target.name]: value});
+        setUserInfo({...userInfo, [e.target.name]: value});
     };
 
+    //  Handles file change
     const handleFileUploadChange = (e) => {
-        setState({...state, profilePictureFile: e.target.files[0], profilePictureUrl: ''});
+        setUserInfo({...userInfo, profilePictureFile: e.target.files[0], profilePictureUrl: ''});
         e.target.value = '';
     };
 
     const removeFile = () => {
-        setState({...state, profilePictureFile: {}});
+        setUserInfo({...userInfo, profilePictureFile: {}});
     };
 
+    //  Checks if user avatar is in correct format (png,...,jpeg)
+    useEffect(() => {
+        const { profilePictureUrl, profilePictureFile } = userInfo;
+
+        const text = isValidImageSet(profilePictureUrl, profilePictureFile) ? '' : '*Please choose a still image (jpegs or png.)';
+        setControls({...controls, pfpWarningText: text});
+    }, [userInfo.profilePictureUrl, userInfo.profilePictureFile]);
+
+    //  Validates and submits user info
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const url = baseUrl();
-        setState({...state, loading: true});
+
+        setUserInfo({...userInfo});
+        setControls({...controls, loading: true});
 
         const {
             email,
@@ -62,15 +83,15 @@ const AddProfileForm = () => {
             lastName,
             occupation,
             dob,
+            state,
             country,
             keySkill,
             profilePictureUrl,
             profilePictureFile,
-        } = state;
+        } = userInfo;
 
         try {
             const profilePicture = await createImageUrl(profilePictureUrl ||  profilePictureFile);
-            console.log(typeof profilePicture, profilePicture);
 
             if (profilePicture) {
                 const user = {
@@ -79,7 +100,7 @@ const AddProfileForm = () => {
                     lastName,
                     occupation,
                     dob,
-                    state: state.state,
+                    state,
                     country,
                     keySkill,
                     profilePicture,
@@ -87,51 +108,35 @@ const AddProfileForm = () => {
 
                 axios.post(`${url}/api/users`, user)
                     .then(res => {
-                        const newState = {...initialState, successText: res.data.message};
-                        setState({...newState});
+                        setUserInfo({...initUserInfo});
+                        setControls({...initControls, successText: res.data.message});
                     })
                     .catch(err => {
-                        const newState = {...initialState, failureText: err.response.data.error || 'Failed to sign up. Try again.'};
-                        setState({...newState});
+                        setUserInfo({...initUserInfo});
+                        setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'});
                     });
             }
-        } catch(err) {
-            setState({...state, profilePictureUrl: '', profilePictureFile: {}, loading: false, failureText: 'Profile picture not valid.'});
+        } catch {
+            setUserInfo({...userInfo, profilePictureUrl: '', profilePictureFile: {}});
+            setControls({loading: false, failureText: 'Profile picture not valid.'});
         }
     };
 
+    //  Scrolls to control text at bottom of modal
     useEffect(() => {
-        if (state.successText || state.failureText) {
+        if (controls.successText ||controls.failureText) {
             const statusSection = document.getElementById('status-text-add-modal');
             statusSection.scrollIntoView({alignToTop: false, behavior: 'smooth'});
         }
-        if (state.successText) {
+        if (controls.successText) {
             setTimeout(() => {
                 closeModal();
                 window.location.reload(false);
             }, 2000);
         }
-    }, [state.failureText, state.successText, state.loading]);
+    }, [controls.failureText, controls.successText, controls.loading]);
 
-    useEffect(() => setLoading(state.loading), [state.loading]);
-
-    /*const disableFutureDates = () => {
-        const today = new Date();
-        const year = today.getFullYear();
-        let date, month;
-        date = today.getDate();
-        month = today.getMonth() + 1;
-
-        if (month < 9) {
-            month = `0${month}`;
-        }
-        if (date < 9) {
-            date = `0${date}`;
-        }
-        
-        const formattedDate = `${year}-${month}-${date}`;
-        return formattedDate;
-    };*/
+    useEffect(() => setLoading(controls.loading), [controls.loading]);
     
     return (
         <>
@@ -141,7 +146,7 @@ const AddProfileForm = () => {
 
             <form className='form' onSubmit={handleSubmit}>
                 <div className='form input-container'>
-                    {state.loading 
+                    {controls.loading 
                         ?   <div className='loader-container-holder loader-container-add-holder'>
                                 <Loader />
                             </div>
@@ -151,14 +156,14 @@ const AddProfileForm = () => {
                         required
                         placeholder='First Name' 
                         name='firstName' 
-                        value={state.firstName} 
+                        value={userInfo.firstName} 
                         onChange={handleChange}
                     />
                     <input
                         required
                         placeholder='Last Name' 
                         name='lastName' 
-                        value={state.lastName} 
+                        value={userInfo.lastName} 
                         onChange={handleChange}
                     />
                     <input
@@ -166,68 +171,65 @@ const AddProfileForm = () => {
                         placeholder='Email Address'
                         name='email'
                         type='email' 
-                        value={state.email}
+                        value={userInfo.email}
                         onChange={handleChange}
                     />
-                    {/*<input
-                        required
-                        type='date'
-                        placeholder='DOB'
-                        title='Pick your date of birth (this is for verification purposes.)'
-                        name='dob'
-                        value={state.dob} 
-                        onChange={handleChange}
-                        max={disableFutureDates()}
-                    /> add to auth sign up (don't allow less than 13)*/}
-                    <div className='input-flex-container'>
-                        <input
-                            className='profile-picture-input'
-                            required
-                            type='url'
-                            placeholder='Profile picture url' 
-                            name='profilePictureUrl' 
-                            value={state.profilePictureUrl} 
-                            onChange={handleChange}
-                            disabled={state.profilePictureFile?.name}
-                        />
-                        {state.profilePictureFile?.name
-                            ?   <span className='file-name'>
-                                    {state.profilePictureFile?.name}
-                                    <span onClick={removeFile}>x</span>
-                                </span>
-                            : null
-                        }
-                        {!state.profilePictureUrl ?
-                            <>
-                                <input
-                                    id='add-file-btn'
-                                    type='file'
-                                    hidden
-                                    onChange={handleFileUploadChange}
-                                />
-                                <label
-                                    className='file-label'
-                                    htmlFor='add-file-btn'
-                                >
-                                    Or Choose File
-                                </label>
-                            </>
-                        : null
-                    }
-                    </div>
+
+                    <>
+                        <div className='input-flex-container'>
+                            <input
+                                className='profile-picture-input'
+                                required
+                                type='url'
+                                placeholder='Profile picture url' 
+                                name='profilePictureUrl' 
+                                value={userInfo.profilePictureUrl} 
+                                onChange={handleChange}
+                                disabled={userInfo.profilePictureFile?.name}
+                            />
+                            {userInfo.profilePictureFile?.name
+                                ?   <span className='file-name'>
+                                        {userInfo.profilePictureFile?.name}
+                                        <span onClick={removeFile}>x</span>
+                                    </span>
+                                : null
+                            }
+                            {!userInfo.profilePictureUrl ?
+                                <>
+                                    <input
+                                        id='add-file-btn'
+                                        type='file'
+                                        hidden
+                                        accept='.png, .jpg, .jpeg, .jfif, .pjpeg, .pjp'
+                                        onChange={handleFileUploadChange}
+                                    />
+                                    <label
+                                        className='file-label'
+                                        htmlFor='add-file-btn'
+                                    >
+                                        Or Choose File
+                                    </label>
+                                </>
+                                : null
+                            }
+                        </div>
+                        <span className='warning-text'>{controls.pfpWarningText}</span>
+                        <br/>
+                    </>
+
                     <div className='input-flex-container'>
                         <input
                             required
                             placeholder='Occupation' 
                             name='occupation' 
-                            value={state.occupation} 
+                            value={userInfo.occupation} 
                             onChange={handleChange}
                         />
                         <input
                             required
                             placeholder='Key skill' 
                             name='keySkill' 
-                            value={state.keySkill} 
+                            value={userInfo.keySkill} 
                             onChange={handleChange}
                         />
                     </div>
@@ -236,14 +238,14 @@ const AddProfileForm = () => {
                             required
                             placeholder='State' 
                             name='state' 
-                            value={state.state} 
+                            value={userInfo.state} 
                             onChange={handleChange}
                         />
                         <input
                             required
                             placeholder='Country' 
                             name='country' 
-                            value={state.country} 
+                            value={userInfo.country} 
                             onChange={handleChange}
                         />
                     </div>
@@ -252,13 +254,13 @@ const AddProfileForm = () => {
             </form>
 
             <p id='status-text-add-modal'>
-                <span className='success-text'>{state.successText}</span>
-                <span className='failure-text'>{state.failureText}</span>
+                <span className='success-text'>{controls.successText}</span>
+                <span className='failure-text'>{controls.failureText}</span>
             </p>
 
             <p className='have-account-text'>
                 Already have account?
-                <Link 
+                <Link
                     to={{pathname: '/', state: {background: location}}}
                     onClick={() => setType('sign-in')}
                 >

@@ -9,11 +9,12 @@ import isEmpty from '../../helpers/validate';
 import baseUrl from '../../helpers/baseUrl';
 import createImageUrl from '../../helpers/createImageUrl';
 import initialCaps from '../../helpers/initialsCaps';
+import isValidImageSet from '../../helpers/isValidImageSet';
 
 import Loader from '../Loader';
 
 const EditProfileForm = () => {
-	const initialState = {
+	const initUserInfo = {
         firstName: '',
         lastName: '',
         occupation: '',
@@ -22,41 +23,58 @@ const EditProfileForm = () => {
         keySkill: '',
         profilePictureUrl: '',
         profilePictureFile: {},
+    };
+
+    const initControls = {
         successText: '',
         failureText: '',
-        loading: false
+        pfpWarningText: '',
+        loading: false,
     };
 
     const 
-        [state, setState] = useState({...initialState}),
+        [userInfo, setUserInfo] = useState({...initUserInfo}),
+        [controls, setControls] = useState({...initControls}),
         { setVisible, setLoading } = useModalContext(),
         { id, name } = useUserContext()
     ;
 
     const closeModal = () => {
         setVisible(false);
-        setState({...initialState});
+        setUserInfo({...initUserInfo});
+        setControls({...initControls});
     };
 
     const handleChange = (e) => {
         let value = e.target.type === 'text' ? initialCaps(e.target.value) : e.target.value;
-        setState({...state, [e.target.name]: value});
+        setUserInfo({...userInfo, [e.target.name]: value});
     };
 
     const handleFileUploadChange = (e) => {
-        setState({...state, profilePictureFile: e.target.files[0], profilePictureUrl: ''});
+        setUserInfo({...userInfo, profilePictureFile: e.target.files[0], profilePictureUrl: ''});
+        e.target.value = '';
     };
 
     const removeFile = () => {
-        setState({...state, profilePictureFile: {}});
+        setUserInfo({...userInfo, profilePictureFile: {}});
     };
+
+    //  Checks if user avatar is in correct format (png,...,jpeg)
+    useEffect(() => {
+        const { profilePictureUrl, profilePictureFile } = userInfo;
+
+        const text = isValidImageSet(profilePictureUrl, profilePictureFile) ? '' : '*Please choose a still image (jpegs or png.)';
+        setControls({...controls, pfpWarningText: text});
+    }, [userInfo.profilePictureUrl, userInfo.profilePictureFile]);
     
+    //  Validates and submits user info
     const handleSubmit = async () => {
         const url = baseUrl();
-        const valid = isEmpty(state);
+        const valid = isEmpty(userInfo);
 
         if (valid) {
-            setState({...state, loading: true});
+            setUserInfo({...userInfo});
+            setControls({...controls, loading: true});
             const {
                 firstName,
                 lastName,
@@ -65,7 +83,7 @@ const EditProfileForm = () => {
                 keySkill,
                 profilePictureUrl,
                 profilePictureFile
-            } = state;
+            } = userInfo;
 
             try {
                 const profilePicture = (profilePictureUrl || JSON.stringify(profilePictureFile) !== '{}')
@@ -76,7 +94,7 @@ const EditProfileForm = () => {
                     firstName,
                     lastName,
                     occupation,
-                    state: state.state,
+                    state: userInfo.state,
                     country,
                     keySkill,
                     profilePicture
@@ -84,43 +102,39 @@ const EditProfileForm = () => {
 
                 axios.put(`${url}/api/users/${id}`, user)
                     .then(() => {
-                        const newState = {...initialState, successText: 'User info edited successfully.'};
-                        setState({...newState});
+                        setUserInfo({...initUserInfo});
+                        setControls({...initControls, successText: 'User info edited successfully.'});
                     })
                     .catch(err => {
-                        const newState = {
-                            ...initialState,
-                            failureText: err.response.data.error || 'Failed to edit information. Try again.'
-                        };
-                        setState({...newState});
+                        setUserInfo({...initUserInfo});
+                        setControls({
+                            ...initControls,
+                            failureText: err.response.data.error || 'Failed to sign up. Try again.'
+                        });
                     })
                 ;
             } catch (err) {
-                setState({
-                    ...state,
-                    profilePictureUrl: '',
-                    profilePictureFile: {}, 
-                    loading: false,
-                    failureText: 'Profile picture not valid.'
-                });
+                setUserInfo({...userInfo, profilePictureUrl: '', profilePictureFile: {}});
+                setControls({loading: false, failureText: 'Profile picture not valid.'});
             }
-        } else setState({...state, failureText: 'Must edit at least one field'});
+        } else setControls({...controls, failureText: 'Must edit at least one field'});
     };
 
+    //  Scrolls to control text at bottom of modal
     useEffect(() => {
-        if (state.successText || state.failureText) {
+        if (controls.successText || controls.failureText) {
             document.getElementById('status-text-edit-modal').scrollIntoView({alignToTop: false, behavior: 'smooth'});
         }
         
-        if (state.successText) {
+        if (controls.successText) {
             setTimeout(() => {
                 closeModal();
                 window.location.reload(false);
             }, 2000);
         }
-    }, [state.failureText, state.successText, state.loading]);
+    }, [controls.failureText, controls.successText, controls.loading]);
 
-    useEffect(() => setLoading(state.loading), [state.loading]);
+    useEffect(() => setLoading(controls.loading), [controls.loading]);
     
     return (
         <>
@@ -130,7 +144,7 @@ const EditProfileForm = () => {
 
             <div className='form'>
                 <div className='form input-container'>
-                    {state.loading 
+                    {controls.loading 
                         ?   <div className='loader-container-holder loader-container-edit-holder'>
                                 <Loader />
                             </div>
@@ -139,59 +153,69 @@ const EditProfileForm = () => {
                     <input
                         placeholder='First Name' 
                         name='firstName' 
-                        value={state.firstName} 
+                        value={userInfo.firstName} 
                         onChange={handleChange}
                     />
                     <input
                         placeholder='Last Name' 
                         name='lastName' 
-                        value={state.lastName} 
+                        value={userInfo.lastName} 
                         onChange={handleChange}
                     />
 
-                    <div className='input-flex-container'>
-                        <input
-                            className='profile-picture-input'
-                            required
-                            type='url'
-                            placeholder='Profile picture url' 
-                            name='profilePictureUrl'
-                            value={state.profilePictureUrl} 
-                            onChange={handleChange}
-                            disabled={state.profilePictureFile?.name}
-                        />
-                        {state.profilePictureFile?.name
-                            ?   <span className='file-name'>
-                                    {state.profilePictureFile?.name}
-                                    <span onClick={removeFile}>x</span>
-                                </span>
-                            : null
-                        }
-                        <input
-                            id='edit-file-btn'
-                            type='file'
-                            hidden
-                            onChange={handleFileUploadChange}
-                        />
-                        <label
-                            className='file-label'
-                            htmlFor='edit-file-btn'
-                        >
-                            Or Choose File
-                        </label>
-                    </div>
+                    <>
+                        <div className='input-flex-container'>
+                            <input
+                                className='profile-picture-input'
+                                required
+                                type='url'
+                                placeholder='Profile picture url' 
+                                name='profilePictureUrl'
+                                value={userInfo.profilePictureUrl} 
+                                onChange={handleChange}
+                                disabled={userInfo.profilePictureFile?.name}
+                            />
+                            {userInfo.profilePictureFile?.name
+                                ?   <span className='file-name'>
+                                        {userInfo.profilePictureFile?.name}
+                                        <span onClick={removeFile}>x</span>
+                                    </span>
+                                : null
+                            }
+                            {!userInfo.profilePictureUrl ?
+                                <>
+                                    <input
+                                        id='edit-file-btn'
+                                        type='file'
+                                        hidden
+                                        accept='.png, .jpg, .jpeg, .jfif, .pjpeg, .pjp'
+                                        onChange={handleFileUploadChange}
+                                    />
+                                    <label
+                                        className='file-label'
+                                        htmlFor='edit-file-btn'
+                                    >
+                                        Or Choose File
+                                    </label>
+                                </>
+                                : null
+                            }
+                        </div>
+                        <span className='warning-text'>{controls.pfpWarningText}</span>
+                        <br />
+                    </>
 
                     <div className='input-flex-container'>
                         <input
                             placeholder='Occupation' 
                             name='occupation' 
-                            value={state.occupation} 
+                            value={userInfo.occupation} 
                             onChange={handleChange}
                         />
                         <input
                             placeholder='Key skill' 
                             name='keySkill' 
-                            value={state.keySkill} 
+                            value={userInfo.keySkill} 
                             onChange={handleChange}
                         />
                     </div>
@@ -199,13 +223,13 @@ const EditProfileForm = () => {
                         <input 
                             placeholder='State' 
                             name='state' 
-                            value={state.state} 
+                            value={userInfo.state} 
                             onChange={handleChange}
                         />
                         <input
                             placeholder='Country' 
                             name='country' 
-                            value={state.country} 
+                            value={userInfo.country} 
                             onChange={handleChange}
                         />
                     </div>
@@ -214,8 +238,8 @@ const EditProfileForm = () => {
             </div>
 
             <p id='status-text-edit-modal'>
-                <span className='success-text'>{state.successText}</span>
-                <span className='failure-text'>{state.failureText}</span>
+                <span className='success-text'>{controls.successText}</span>
+                <span className='failure-text'>{controls.failureText}</span>
             </p>
         </>
     );
