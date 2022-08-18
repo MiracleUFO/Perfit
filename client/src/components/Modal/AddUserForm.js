@@ -191,7 +191,7 @@ const AddProfileForm = () => {
                             />
                             {userInfo.profilePictureFile?.name
                                 ?   <span className='file-name'>
-                                        {userInfo.profilePictureFile?.name}
+                                        <span>{userInfo.profilePictureFile?.name}</span>
                                         <span onClick={removeFile}>x</span>
                                     </span>
                                 : null
