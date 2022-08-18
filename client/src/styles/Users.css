@@ -47,7 +47,7 @@
     display: inline-block;
     margin-right: 3%;
     transition: all 0.2s ease;
-    animation-duration: 2.3s;
+    animation-duration: 2.25s;
     animation-delay: 0.75s;
     animation-timing-function: ease;
 }

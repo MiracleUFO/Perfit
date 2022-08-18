@@ -2,7 +2,7 @@ import { FaDiscord, FaMediumM } from 'react-icons/fa';
 import { BsTwitter, BsSlack } from 'react-icons/bs';
 import { ImHackernews } from 'react-icons/im';
 
-import scrollDown from '../helpers/scrollDown';
+import { scrollDown } from '../helpers/animations';
 
 import 'animate.css';
 import '../styles/Hero.css';

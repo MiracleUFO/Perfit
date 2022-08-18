@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useModalContext } from '../../context/modalContext';
+import { useUserContext } from '../../context/userContext';
 
 import Loader from '../Loader';
 
@@ -23,21 +24,21 @@ const AddProfileForm = () => {
         profilePictureUrl: '',
         profilePictureFile: {}
     };
-
     const initControls = {
         successText: '',
         failureText: '',
         pfpWarningText: '',
         loading: false,
     };
-
     const
         [userInfo, setUserInfo] = useState({...initUserInfo}),
         [controls, setControls] = useState({...initControls}),
         { setVisible, setType, setLoading } = useModalContext(),
+        { setJustAdded } = useUserContext(),
         location = useLocation()
     ;
 
+    // Closes the modal when actions are finished on form
     const closeModal = () => {
         setVisible(false);
         setUserInfo({...initUserInfo});
@@ -76,6 +77,7 @@ const AddProfileForm = () => {
 
         setUserInfo({...userInfo});
         setControls({...controls, loading: true});
+        setJustAdded(false);
 
         const {
             email,
@@ -108,6 +110,7 @@ const AddProfileForm = () => {
 
                 axios.post(`${url}/api/users`, user)
                     .then(res => {
+                        setJustAdded(true);
                         setUserInfo({...initUserInfo});
                         setControls({...initControls, successText: res.data.message});
                     })
@@ -131,7 +134,6 @@ const AddProfileForm = () => {
         if (controls.successText) {
             setTimeout(() => {
                 closeModal();
-                window.location.reload(false);
             }, 2000);
         }
     }, [controls.failureText, controls.successText, controls.loading]);
@@ -144,7 +146,7 @@ const AddProfileForm = () => {
                 Hey Stranger! Join our community.
             </p>
 
-            <form className='form' onSubmit={handleSubmit}>
+            <form className='form' id='add-user-form' onSubmit={handleSubmit}>
                 <div className='form input-container'>
                     {controls.loading 
                         ?   <div className='loader-container-holder loader-container-add-holder'>

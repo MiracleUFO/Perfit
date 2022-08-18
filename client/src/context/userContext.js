@@ -3,16 +3,18 @@ import PropTypes from 'prop-types';
 
 const UserContext = createContext({
     id: null,
-    name: ''
+    name: '',
+    justAdded: false,
 });
 
 export const UserProvider = ({ children }) => {
     const [id, setId] = useState(null);
     const [name, setName] = useState('');
+    const [justAdded, setJustAdded] = useState(false);
 
     return (
         <UserContext.Provider 
-            value={{ id, name, setId, setName }}
+            value={{ id, name, justAdded, setId, setName, setJustAdded }}
         >
             {children}
         </UserContext.Provider>

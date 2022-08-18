@@ -19,7 +19,7 @@ const checkUserIdIsUnique = async (id) => {
     const user = await User.findOne({ id: id });
     let newId = id;
 
-    if (user) {
+    if (user || id === 0) {
         newId = Math.ceil(Math.random() * 1000);
         checkUserIdIsUnique(newId);
     } else {

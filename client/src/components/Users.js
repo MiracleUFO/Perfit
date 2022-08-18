@@ -1,56 +1,64 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useUserContext } from '../context/userContext';
 
 import baseUrl from '../helpers/baseUrl';
-import isInViewport from '../helpers/isInViewPort';
+import { slideInUserCards, scrollDown, beep } from '../helpers/animations';
 
 import 'animate.css';
 import '../styles/Users.css';
 
 const Users = () => {
     const [users, setUsers] = useState([]);
+    const { justAdded, setJustAdded } = useUserContext();
 
-    useEffect(() => {
+    const fetchUsers = async () => {
         const url = baseUrl();
         axios.get(`${url}/api/users`)
-            .then(res => setUsers(res.data));
+            .then(res => setUsers(res.data))
+        ;
+    };
+
+    useEffect(() => {
+        fetchUsers();
     }, []);
 
     useEffect(() => {
+        if (justAdded)
+            fetchUsers();
+    },  [justAdded]);
+
+    useEffect(() => {
         if (users.length) {
-            slideInAnimationUsersContainer();
-            window.addEventListener('scroll', slideInAnimationUsersContainer);
-        }
+            slideInUserCards();
+            
+            if (justAdded) {
+                setTimeout(() => {
+                    const
+                        usersContainer = document.getElementById('users-container'),
+                        top = usersContainer.getBoundingClientRect().top + window.scrollY + usersContainer.clientHeight - 500,
+                        usersCards = Array.from(document.getElementsByClassName('user-card')),
+                        lastUserCard = usersCards.pop()
+                    ;
 
+                    scrollDown(top);
+                    beep(lastUserCard, usersCards);
+
+                    lastUserCard?.addEventListener('animationend', (e) => {
+                        if (e.animationName === 'pulse') {
+                            setJustAdded(false);
+                        }
+                    });
+                }, 3000);
+            } else {
+                window.addEventListener('scroll', slideInUserCards);
+            }
+        }
         return () => {
-            window.removeEventListener('scroll', slideInAnimationUsersContainer);
+            window.removeEventListener('scroll', slideInUserCards);
         };
-    }, [users]);
-
-    // Slide in when user container is in view
-    const slideInAnimationUsersContainer = () => {
-        const 
-            usersContainer = document.getElementById('users-container'),
-            animatedClassesForHeader = ['animate__animated', 'animate__fadeInRightBig'],
-            animatedClassesForUsers = ['animate__animated', 'animate__bounceInRight'],
-            userCards = Array.from(usersContainer.getElementsByClassName('user-card')),
-            h1 = usersContainer.getElementsByTagName('h1')[0]
-        ;
-        if (isInViewport(usersContainer)) {
-            h1.classList.add(...animatedClassesForHeader);
-            for (let i = 0; i < userCards.length; i++) {
-                userCards[i].classList.add(...animatedClassesForUsers);
-                userCards[i].style.opacity = 1;
-            }
-        } else {
-            h1.classList.remove(...animatedClassesForHeader);
-            for (let i = 0; i < userCards.length; i++) {
-                userCards[i].classList.remove(...animatedClassesForUsers);
-                userCards[i].style.opacity = 0.5;
-            }
-        }
-    };
+    }, [users, justAdded]);
 
     return (
         <div id='users-container' className='container'>
