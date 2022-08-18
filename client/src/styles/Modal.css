@@ -279,9 +279,17 @@ input[type="date"]::before {
     position: absolute;
 }
 
+.loader-container-add-holder {
+    height: 415px;
+}
+
+.loader-container-add-holder .loader-container {
+    width: 100%;
+}
+
 
 .loader-container-edit-holder {
-    height: 380px;
+    height: 400px;
 }
 
 .loader-container-edit-holder .loader-container {
