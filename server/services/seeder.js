@@ -26,7 +26,6 @@ const populate = async () => {
                         keySkill: user.employment.key_skill,
                         profilePicture: user.avatar
                     };
-
                     createUser(formattedUser);
                 });
             });
