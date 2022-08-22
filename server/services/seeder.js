@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const fetch = require('node-fetch');
 const config = require('../config/mongo');
-const db = require('./connection');
+const db = require('./dbConnection');
 
 const { createUser } = require('../controllers/usersController');
 

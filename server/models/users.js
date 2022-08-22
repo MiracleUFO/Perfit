@@ -14,8 +14,7 @@ const userSchema = new Schema({
     id: {
         type: Number,
         required: true,
-        unique: true,
-        default: 0
+        unique: true
     },
     firstName: defaultSchema,
     lastName: defaultSchema,

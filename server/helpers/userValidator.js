@@ -18,13 +18,12 @@ const validator = (req) => {
 const checkUserIdIsUnique = async (id) => {
     const user = await User.findOne({ id: id });
     let newId = id;
-
+    
     if (user || id === 0) {
         newId = Math.ceil(Math.random() * 1000);
         checkUserIdIsUnique(newId);
-    } else {
-        return newId;
     }
+    return newId;
 }
 
 module.exports = {
