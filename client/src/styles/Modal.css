@@ -32,7 +32,7 @@
 }
 
 .brand-wrapper {
-    width: 100%;
+    width: 90%;
     border-bottom: 1px solid rgba(220, 220, 220, 0.35);
 }
 
@@ -41,13 +41,9 @@
     margin-right: 2%;
 }
 
-.brand-wrapper,
-.welcome-text {
-    align-self: flex-start;
-}
-
 .welcome-text {
     font-size: 1.12em;
+    align-self: flex-start;
 }
 
 .close-icon {
@@ -59,6 +55,11 @@
 }
 
 @media screen and (min-width: 800px) {
+    .welcome-text {
+        position: relative;
+        left: -0.5em;
+    }
+
     .close-icon {
         top: 20px;
         left: 95%;
@@ -89,6 +90,7 @@
 
 .modal-form .form {
     padding-bottom: 3px !important;
+    width: 100%;
 }
 
 .modal-form {
@@ -101,8 +103,9 @@
 
 @media screen and (min-width: 800px) {
     .modal-form {
-        width: 40%;
+        width: 45%;
         height: 650px;
+        justify-content: space-around;
     }
 }
   
@@ -256,16 +259,19 @@ input[type="date"]::before {
 
 .warning-text {
     color: #eed202;
-    font-size: 0.8em;
-    width: calc(90% + 2em);
 }
 
 .failure-text {
     color: #b73239;
 }
 
+.pfp-text {
+    font-size: 0.75em;
+    width: calc(90% + 2em);
+}
+
 @media screen and (min-width: 800px) {
-    .warning-text {
+    .pfp-text {
         width: calc(100% + 2em);
     }    
 }
@@ -280,7 +286,7 @@ input[type="date"]::before {
 }
 
 .loader-container-add-holder {
-    height: 415px;
+    height: 430px;
 }
 
 .loader-container-add-holder .loader-container {
@@ -289,7 +295,7 @@ input[type="date"]::before {
 
 
 .loader-container-edit-holder {
-    height: 400px;
+    height: 410px;
 }
 
 .loader-container-edit-holder .loader-container {

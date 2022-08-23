@@ -11,13 +11,17 @@ export const scrollDown = (top) => {
 
 export const beep = (el, container) => {
     if (document.readyState === 'complete') {
-        const animationClasses = ['animate__animated', 'animate__pulse', 'animate__delay-2s'];
+        const animationClasses = ['animate__animated', 'animate__pulse'];
+
         if (container) {
             for (let i = 0; i < container.length; i++) {
-                container[i].classList.remove(...animationClasses);
+                container[i].classList.remove('animate__pulse');
             }
         }
-        el.classList.add(...animationClasses);
+        if (el) {
+            el.classList.remove('animate__bounceInRight');
+            el.classList.add(...animationClasses);
+        }
     }
 };
 
@@ -35,12 +39,15 @@ export const slideInUserCards = () => {
         if (isInViewport(usersContainer) && document.readyState === 'complete') {
             h1.classList.add(...animatedClassesForHeader);
             for (let i = 0; i < userCards.length; i++) {
-                userCards[i].classList.add(...animatedClassesForUsers);
+                if (!Array.from(userCards[i].classList).includes('animate__pulse')) { 
+                    userCards[i].classList.add(...animatedClassesForUsers);
+                    userCards[i].classList.remove('animate__pulse');
+                }
             }
         } else {
             h1.classList.remove(...animatedClassesForHeader);
             for (let i = 0; i < userCards.length; i++) {
-                userCards[i].classList.remove(...animatedClassesForUsers);
+                userCards[i].classList.remove(...animatedClassesForUsers, 'animate__pulse');
             }
         }
     }

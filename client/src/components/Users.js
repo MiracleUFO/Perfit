@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useUserContext } from '../context/userContext';
 
@@ -22,6 +22,12 @@ const Users = () => {
 
     useEffect(() => {
         fetchUsers();
+        slideInUserCards();
+        window.addEventListener('scroll', slideInUserCards);
+
+        return () => {
+            window.removeEventListener('scroll', slideInUserCards);
+        };
     }, []);
 
     useEffect(() => {
@@ -29,41 +35,32 @@ const Users = () => {
             fetchUsers();
     },  [justAdded]);
 
-    useEffect(() => {
-        if (users.length) {
-            slideInUserCards();
-            
-            if (justAdded) {
-                setTimeout(() => {
-                    const
-                        usersContainer = document.getElementById('users-container'),
-                        top = usersContainer.getBoundingClientRect().top + window.scrollY + usersContainer.clientHeight - 500,
-                        usersCards = Array.from(document.getElementsByClassName('user-card')),
-                        lastUserCard = usersCards.pop()
-                    ;
+    const usersContainerRef = useCallback(node => {
+        if (node && justAdded)
+            setTimeout(() => {
+                const
+                    top = node?.getBoundingClientRect().top + window.scrollY + node?.clientHeight - 500,
+                    usersCards = Array.from(document.getElementsByClassName('user-card')),
+                    lastUserCard = usersCards?.pop()
+                ;
+                scrollDown(top);
+                lastUserCard?.addEventListener('animationend', beepAnimationContainer);
+            }, 3000);
+    });
 
-                    scrollDown(top);
-                    beep(lastUserCard, usersCards);
-
-                    lastUserCard?.addEventListener('animationend', (e) => {
-                        if (e.animationName === 'pulse') {
-                            setJustAdded(false);
-                        }
-                    });
-                }, 3000);
-            } else {
-                window.addEventListener('scroll', slideInUserCards);
-            }
+    const beepAnimationContainer = (e) => {
+        if (e.animationName === 'bounceInRight')
+            beep(e.target, document.getElementById('user-cards-container'));
+        if (e.animationName === 'pulse') {
+            e.target?.removeEventListener('animationend', beepAnimationContainer);
+            setJustAdded(false);
         }
-        return () => {
-            window.removeEventListener('scroll', slideInUserCards);
-        };
-    }, [users, justAdded]);
+    };
 
     return (
-        <div id='users-container' className='container'>
+        <div id='users-container' className='container' ref={usersContainerRef}>
             <h1>Freelancer Profiles 🤖</h1>
-            <div>
+            <div id='user-cards-container'>
                 {users.map(user =>
                     <Link
                         className='user-card'

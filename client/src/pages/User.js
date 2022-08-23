@@ -71,11 +71,6 @@ const User = () => {
             ); else 
                 return (
                     <main>
-                        {/*<AddProfileModal />
-                        <EditProfileModal 
-                            id={id}
-                            name={userInfo.firstName}
-                        />*/}
                         <Modal />
                         <div>
                             <Header />

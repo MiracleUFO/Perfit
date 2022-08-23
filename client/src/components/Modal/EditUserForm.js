@@ -63,7 +63,7 @@ const EditProfileForm = () => {
     useEffect(() => {
         const { profilePictureUrl, profilePictureFile } = userInfo;
 
-        const text = isValidImageSet(profilePictureUrl, profilePictureFile) ? '' : '*Please choose a still image (jpegs or png.)';
+        const text = isValidImageSet(profilePictureUrl, profilePictureFile) ? '' : '*Please upload a still image (jpegs or png url or file.)';
         setControls({...controls, pfpWarningText: text});
     }, [userInfo.profilePictureUrl, userInfo.profilePictureFile]);
     
@@ -115,7 +115,7 @@ const EditProfileForm = () => {
                 ;
             } catch (err) {
                 setUserInfo({...userInfo, profilePictureUrl: '', profilePictureFile: {}});
-                setControls({loading: false, failureText: 'Profile picture not valid.'});
+                setControls({loading: false, failureText: 'Profile picture not uploaded successfully. Try again.'});
             }
         } else setControls({...controls, failureText: 'Must edit at least one field'});
     };
@@ -137,7 +137,7 @@ const EditProfileForm = () => {
     useEffect(() => setLoading(controls.loading), [controls.loading]);
     
     return (
-        <>
+        <div className='animate__animated animate__backInLeft'>
             <p className='welcome-text'>
                 Hey {name}! Edit your profile.
             </p>
@@ -201,7 +201,10 @@ const EditProfileForm = () => {
                                 : null
                             }
                         </div>
-                        <span className='warning-text'>{controls.pfpWarningText}</span>
+                        {controls.pfpWarningText ?
+                            <span className='pfp-text warning-text'>{controls.pfpWarningText}</span>
+                        :   <span className='pfp-text success-text'>**A picture of you with a solid, neutral background.</span>
+                        }
                         <br />
                     </>
 
@@ -241,7 +244,7 @@ const EditProfileForm = () => {
                 <span className='success-text'>{controls.successText}</span>
                 <span className='failure-text'>{controls.failureText}</span>
             </p>
-        </>
+        </div>
     );
 };
 

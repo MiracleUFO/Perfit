@@ -13,7 +13,7 @@ const Header = () => {
         
     const displayAddUserForm = () => {
         setVisible(true);
-        setType('add-user');
+        setType('sign-up');
     };
 
     return (

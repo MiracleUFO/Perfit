@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useModalContext } from '../../context/modalContext';
-import { addFormImg, editFormImg } from '../../constants/modalAssets';
+import { addFormImg, editFormImg, signUpFormImg } from '../../constants/modalAssets';
 
 import Logo from '../Logo';
 import AddUserForm from './AddUserForm';
 import EditProfileForm from './EditUserForm';
+import SignUpForm from './SignUpForm';
 
 import '../../styles/Modal.css';
+import 'animate.css';
 
 const Modal = () => {
     const 
@@ -25,6 +27,9 @@ const Modal = () => {
                     break;
                 case 'edit-user':
                     setImgAttrs({...editFormImg});
+                    break;
+                case 'sign-up':
+                    setImgAttrs({...signUpFormImg});
                     break;
             }
         }
@@ -48,6 +53,7 @@ const Modal = () => {
                         </section>
                         {type === 'add-user' ? <AddUserForm /> : null}
                         {type === 'edit-user' ? <EditProfileForm /> : null}
+                        {type === 'sign-up' ? <SignUpForm /> : null}
                     </div>
 
                     <img className='section-img' {...imgAttrs} />

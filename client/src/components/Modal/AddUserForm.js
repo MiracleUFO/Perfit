@@ -65,7 +65,7 @@ const AddProfileForm = () => {
     useEffect(() => {
         const { profilePictureUrl, profilePictureFile } = userInfo;
 
-        const text = isValidImageSet(profilePictureUrl, profilePictureFile) ? '' : '*Please choose a still image (jpegs or png.)';
+        const text = isValidImageSet(profilePictureUrl, profilePictureFile) ? '' : '*Please upload a still image (jpegs or png url or file.)';
         setControls({...controls, pfpWarningText: text});
     }, [userInfo.profilePictureUrl, userInfo.profilePictureFile]);
 
@@ -119,15 +119,15 @@ const AddProfileForm = () => {
                         setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'});
                     });
             }
-        } catch {
+        } catch(e) {
             setUserInfo({...userInfo, profilePictureUrl: '', profilePictureFile: {}});
-            setControls({loading: false, failureText: 'Profile picture not valid.'});
+            setControls({loading: false, failureText: 'Profile picture not uploaded successfully. Try again.'});
         }
     };
 
     //  Scrolls to control text at bottom of modal
     useEffect(() => {
-        if (controls.successText ||controls.failureText) {
+        if (controls.successText || controls.failureText) {
             const statusSection = document.getElementById('status-text-add-modal');
             statusSection.scrollIntoView({alignToTop: false, behavior: 'smooth'});
         }
@@ -141,7 +141,7 @@ const AddProfileForm = () => {
     useEffect(() => setLoading(controls.loading), [controls.loading]);
     
     return (
-        <>
+        <div className='animate__animated animate__backInLeft'>
             <p className='welcome-text'>
                 Hey Stranger! Join our community.
             </p>
@@ -215,7 +215,10 @@ const AddProfileForm = () => {
                                 : null
                             }
                         </div>
-                        <span className='warning-text'>{controls.pfpWarningText}</span>
+                        {controls.pfpWarningText ?
+                            <span className='pfp-text warning-text'>{controls.pfpWarningText}</span>
+                        :   <span className='pfp-text success-text'>**A picture of you with a solid, neutral background.</span>
+                        }
                         <br/>
                     </>
 
@@ -269,7 +272,7 @@ const AddProfileForm = () => {
                     &nbsp;Sign In
                 </Link>
             </p>
-        </>
+        </div>
     );
 };
 

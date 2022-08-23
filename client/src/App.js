@@ -2,8 +2,8 @@ import { UserProvider } from './context/userContext';
 import { ModalProvider } from './context/modalContext';
 import { Switch, Route, useLocation } from 'react-router';
 
-import Home from './screens/Home';
-import User from './screens/User';
+import Home from './pages/Home';
+import User from './pages/User';
 
 const App = () => {
   const location = useLocation();
