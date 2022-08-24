@@ -1,5 +1,5 @@
 const User = require('../models/users');
-const { validator, checkUserIdIsUnique } = require('../helpers/userValidator');
+const { required } = require('../helpers/validator');
 
 const createUser = async (data) => {
     const {
@@ -38,10 +38,10 @@ const getUsers = async (req, res) => {
 }
 
 const getUser = async (req, res) => {
-    const {id } = req.params;
+    const { id } = req.params;
     User.findOne({ id: id })
         .then(user => {
-            if (!user) return res.status(404).send({status: 404, error: 'User does not exist.'});
+            if (!user) return res.status(404).send({ status: 404, error: 'User does not exist.' });
             const {  
                 firstName,
                 lastName,
@@ -99,7 +99,7 @@ const editExistingUser = async (req, res, next) => {
     }, {
         new: true
     }, (err, user) => {
-        if (!user) return res.status(404).json({status: 404, error: 'User does not exist.'});
+        if (!user) return res.status(404).json({ status: 404, error: 'User does not exist.' });
         if (err) return next(err);
         return res.status(204).json(user);
     });
@@ -114,38 +114,36 @@ const addNewUser = async (req, res, next) => {
         country,
         occupation,
         keySkill,
-        profilePicture
+        profilePicture,
+        id
     } = req.body;
 
-    if (validator(req)) {
-        return res.status(400).json({status: 400, error: 'Required fields not sent.'});
-    }
+    if (!required(req.body))
+        return res.status(400).json({ status: 400, error: 'Required fields not sent.' })
+    ;
 
     const user = await User.findOne({ email: email });
 
-    if (user) {
-        return res.status(409).send({error: 'User already exists.'});
-    } else {
-        const formattedUser = {
-            id: Math.ceil(Math.random() * 1000),
-            firstName, 
-            lastName,
-            email,
-            state,
-            country,
-            occupation,
-            keySkill,
-            profilePicture
-        };
+    if (user)
+        return res.status(409).send({ status: 409, error: 'Profile already added.' });
+    ;
 
-        formattedUser.id = await checkUserIdIsUnique(formattedUser.id);
-
-        try {
-            await createUser(formattedUser);
-            return res.status(201).json({status: 201, message: 'New user created.'});
-        } catch (err) {
-            next(err)
-        }
+    const formattedUser = {
+        id,
+        firstName, 
+        lastName,
+        email,
+        state,
+        country,
+        occupation,
+        keySkill,
+        profilePicture
+    };
+    try {
+        await createUser(formattedUser);
+        return res.status(201).json({ status: 201, message: 'Profile created.' });
+    } catch (err) {
+        next(err)
     }
 }
 

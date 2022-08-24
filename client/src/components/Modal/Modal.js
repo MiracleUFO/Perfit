@@ -3,9 +3,9 @@ import { useModalContext } from '../../context/modalContext';
 import { addFormImg, editFormImg, signUpFormImg } from '../../constants/modalAssets';
 
 import Logo from '../Logo';
-import AddUserForm from './AddUserForm';
-import EditProfileForm from './EditUserForm';
-import SignUpForm from './SignUpForm';
+import AddUserForm from './Forms/AddUserForm';
+import EditProfileForm from './Forms/EditUserForm';
+import SignUpForm from './Forms/SignUpForm';
 
 import '../../styles/Modal.css';
 import 'animate.css';

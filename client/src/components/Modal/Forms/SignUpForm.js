@@ -1,13 +1,17 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useModalContext } from '../../context/modalContext';
-import disableFutureDates from '../../helpers/disableFutureDates';
+import { useModalContext } from '../../../context/modalContext';
 
-import Loader from '../Loader';
+import baseUrl from '../../../helpers/baseUrl';
+import disableFutureDates from '../../../helpers/disableFutureDates';
+
+import Loader from '../../Loader';
+
 import 'animate.css';
 
 const SignUpForm = () => {
-    const initUserInfo = {
+    const initAuthInfo = {
         email: '',
         password: '',
         confirmPass: '',
@@ -18,21 +22,64 @@ const SignUpForm = () => {
         failureText: '',
         loading: false,
     };
-
     const 
-        [controls, /*setControls*/] = useState({...initControls}),
-        [userInfo, /*setUserInfo*/] = useState({...initUserInfo}),
-        { setType } = useModalContext(),
+        [controls, setControls] = useState({...initControls}),
+        [authInfo, setAuthInfo] = useState({...initAuthInfo}),
+        { /*setVisible,*/ setType, setLoading } = useModalContext(),
         location = useLocation()
     ;
 
+    /*const closeModal = () => {
+        setVisible(false);
+        setAuthInfo({...initAuthInfo});
+        setControls({...initControls});
+    };*/
+
+    const handleChange = (e) => setAuthInfo({...authInfo, [e.target.name]: e.target.value});
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        setControls({...controls, loading: true});
+
+        const 
+            url = baseUrl(),
+            {
+                email,
+                password,
+                confirmPass,
+                dob
+            } = authInfo,
+            auth = {
+                email,
+                password,
+                confirmPass,
+                dob
+            }
+        ;
+        axios.post(`${url}/api/auth/sign-up`, auth)
+            .then(res => {
+                setAuthInfo({...initAuthInfo});
+                setControls({...initControls, successText: res.data.message});
+            })
+            .catch(err => setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'}))
+        ;
     };
 
-    const handleChange = (e) => {
-        console.log(e.target.value);
-    };
+    useEffect(() => setLoading(controls.loading), [controls.loading]);
+
+     //  Scrolls to control text at bottom of modal
+     /*useEffect(() => {
+        if (controls.successText || controls.failureText) {
+            document.getElementById('status-text-signup-modal').scrollIntoView({alignToTop: false, behavior: 'smooth'});
+        }
+        
+        if (controls.successText) {
+            setTimeout(() => {
+                closeModal();
+                window.location.reload(false);
+            }, 2000);
+        }
+    }, [controls.failureText, controls.successText, controls.loading]);*/
 
     return (
         <div className='animate__animated animate__backInLeft'>
@@ -53,7 +100,7 @@ const SignUpForm = () => {
                         placeholder='Email Address'
                         name='email'
                         type='email' 
-                        value={userInfo.email}
+                        value={authInfo.email}
                         onChange={handleChange}
                     />
                     <input
@@ -61,7 +108,7 @@ const SignUpForm = () => {
                         placeholder='Password'
                         name='password'
                         type='password' 
-                        value={userInfo.password}
+                        value={authInfo.password}
                         onChange={handleChange}
                     />
                     <input
@@ -69,16 +116,16 @@ const SignUpForm = () => {
                         placeholder='Confirm Password'
                         name='confirmPass'
                         type='password' 
-                        value={userInfo.email}
+                        value={authInfo.confirmPass}
                         onChange={handleChange}
                     />
                     <input
                         required
                         type='date'
-                        placeholder='DOB'
+                        placeholder='Date of Birth'
                         title='Pick your date of birth (this is for verification purposes.)'
                         name='dob'
-                        value={userInfo.dob} 
+                        value={authInfo.dob} 
                         onChange={handleChange}
                         max={disableFutureDates()}
                     />
@@ -86,7 +133,7 @@ const SignUpForm = () => {
                 <button>Join</button>
             </form>
 
-            <p id='status-text-signup-modal'>
+            <p id='status-text-signup-modal' className='status-text'>
                 <span className='success-text'>{controls.successText}</span>
                 <span className='failure-text'>{controls.failureText}</span>
             </p>

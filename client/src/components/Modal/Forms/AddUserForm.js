@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useModalContext } from '../../context/modalContext';
-import { useUserContext } from '../../context/userContext';
+import { useModalContext } from '../../../context/modalContext';
+import { useUserContext } from '../../../context/userContext';
 
-import Loader from '../Loader';
+import Loader from '../../Loader';
 
-import baseUrl from '../../helpers/baseUrl';
-import createImageUrl from '../../helpers/createImageUrl';
-import initialCaps from '../../helpers/initialsCaps';
-import isValidImageSet from '../../helpers/isValidImageSet';
+import baseUrl from '../../../helpers/baseUrl';
+import createImageUrl from '../../../helpers/createImageUrl';
+import initialCaps from '../../../helpers/initialsCaps';
+import isValidImageSet from '../../../helpers/isValidImageSet';
 
 const AddProfileForm = () => {
     const initUserInfo = {
@@ -64,7 +64,6 @@ const AddProfileForm = () => {
     //  Checks if user avatar is in correct format (png,...,jpeg)
     useEffect(() => {
         const { profilePictureUrl, profilePictureFile } = userInfo;
-
         const text = isValidImageSet(profilePictureUrl, profilePictureFile) ? '' : '*Please upload a still image (jpegs or png url or file.)';
         setControls({...controls, pfpWarningText: text});
     }, [userInfo.profilePictureUrl, userInfo.profilePictureFile]);
@@ -116,7 +115,7 @@ const AddProfileForm = () => {
                     })
                     .catch(err => {
                         setUserInfo({...initUserInfo});
-                        setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'});
+                        setControls({...initControls, failureText: err.response.data.error || 'Failed to add profile. Try again.'});
                     });
             }
         } catch(e) {

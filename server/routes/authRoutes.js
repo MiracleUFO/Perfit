@@ -1,17 +1,29 @@
 const express = require('express');
 const router = express.Router();
 
-router.post('/sign-up');
+const {
+    signup,
+    signin,
+    verify,
+    getAuth
+} = require('../controllers/authController');
 
-router.post('/sign-in');
+const {
+    exists,
+    checkTokenValid,
+} = require('../middlewares/Auth');
 
-router.post('sign-out');
+router.post('/sign-up', signup);
 
-router.post('/verify');
+/*router.post('/sign-in', exists, checkTokenValid, signin);
 
-router.post('/isTokenValid'); //
+router.get('/verify', verify);
 
-router.get('/:id'); // To check if user is verified in auth, current user just check both user's mails if same.
+router.get('/is-token-valid', checkTokenValid);*/
 
-//Middlewares
-// exists: allows user add profile, addProfile: tokenisvalid (error ask to sign in.)
+router.get('/:email', getAuth); // :email will be removed to use token to find out. To check if user is verified in auth sends back email & verified, current user just check both user's mails if same.*/
+
+module.exports = router;
+
+//  Middlewares
+//  exists: allows user add profile, addProfile to know if exists in profile check if token is valid, then check if user exists in profile with id from token decryption

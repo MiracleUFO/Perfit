@@ -105,7 +105,7 @@
     .modal-form {
         width: 45%;
         height: 650px;
-        justify-content: space-around;
+        justify-content: space-evenly;
     }
 }
   
@@ -247,6 +247,10 @@ input[type="date"]::before {
     .have-account-text a {
         display: inline;
     }
+}
+
+.status-text {
+    text-align: center;
 }
 
 .success-text, .failure-text, .warning-text {

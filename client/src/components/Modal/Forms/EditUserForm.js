@@ -2,16 +2,16 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 
 import { useState, useEffect } from 'react';
-import { useUserContext } from '../../context/userContext';
-import { useModalContext } from '../../context/modalContext';
+import { useUserContext } from '../../../context/userContext';
+import { useModalContext } from '../../../context/modalContext';
 
-import isEmpty from '../../helpers/validate';
-import baseUrl from '../../helpers/baseUrl';
-import createImageUrl from '../../helpers/createImageUrl';
-import initialCaps from '../../helpers/initialsCaps';
-import isValidImageSet from '../../helpers/isValidImageSet';
+import isEmpty from '../../../helpers/validate';
+import baseUrl from '../../../helpers/baseUrl';
+import createImageUrl from '../../../helpers/createImageUrl';
+import initialCaps from '../../../helpers/initialsCaps';
+import isValidImageSet from '../../../helpers/isValidImageSet';
 
-import Loader from '../Loader';
+import Loader from '../../Loader';
 
 const EditProfileForm = () => {
 	const initUserInfo = {

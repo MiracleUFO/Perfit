@@ -32,8 +32,6 @@ const populate = async () => {
     };
 };
 
-console.log(config.uri, config._config);
-
 const seed = async () => {
     if (!db) {
         mongoose.connect(config.uri, config._config);

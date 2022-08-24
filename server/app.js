@@ -13,10 +13,12 @@ app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT || 8080;
 
 //  Routers
+const authRoutes = require('./routes/authRoutes');
 const usersRoutes = require('./routes/usersRoutes');
 const cloudinaryRoutes = require('./routes/cloudinaryRoutes');
 
 //  Base paths
+app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/cloudinary', cloudinaryRoutes);
  
