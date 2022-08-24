@@ -215,8 +215,8 @@ const AddProfileForm = () => {
                             }
                         </div>
                         {controls.pfpWarningText ?
-                            <span className='pfp-text warning-text'>{controls.pfpWarningText}</span>
-                        :   <span className='pfp-text success-text'>**A picture of you with a solid, neutral background.</span>
+                            <span className='info-text warning-text'>{controls.pfpWarningText}</span>
+                        :   <span className='info-text success-text'>**A picture of you with a solid, neutral background.</span>
                         }
                         <br/>
                     </>

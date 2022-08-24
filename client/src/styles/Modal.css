@@ -108,6 +108,13 @@
         justify-content: space-evenly;
     }
 }
+
+.form-holder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
   
 .modal-form input,
 select {
@@ -118,6 +125,15 @@ select {
     border-radius: 10px;
     border: none;
     background-color: #ECF3FF;
+}
+
+input:focus {
+    outline: none;
+    border: 2px groove rgba(15, 111, 225, 0.3);
+    box-shadow: 5px 4px 5px 1px aliceblue, 
+                    -5px 4px 5px 1px aliceblue,
+                    5px -4px 5px 1px aliceblue
+    ;
 }
 
 input[type="date"]::before {
@@ -159,11 +175,11 @@ input[type="date"]::before {
     width: 38%;
 }
 
-.profile-picture-input {
+.profile-picture-input, input[type="password"] {
     width: 100% !important;
 }
 
-.file-label {
+.file-label, .pass-strenght-info {
     align-self: center;
     position: absolute;
     font-size: 0.75em;
@@ -176,6 +192,17 @@ input[type="date"]::before {
     border: 1px outset lightblue;
     border-radius: 7px;
     text-align: center;
+}
+
+.pass-strenght-info {
+    left: calc(100% - 4.7em);
+    font-size: 0.7em;
+    border: none;
+    height: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 7px 0 7px 7px
 }
 
 .file-name {
@@ -258,25 +285,26 @@ input[type="date"]::before {
 }
 
 .success-text {
-    color: #1aa260;
+    color: var(--chrome-green);
 }
 
 .warning-text {
-    color: #eed202;
+    color: var(--warning-yellow);
 }
 
 .failure-text {
-    color: #b73239;
+    color: var(--failure-red);
 }
 
-.pfp-text {
+.info-text {
     font-size: 0.75em;
     width: calc(90% + 2em);
 }
 
 @media screen and (min-width: 800px) {
-    .pfp-text {
+    .info-text {
         width: calc(100% + 2em);
+        margin-bottom: 10px;
     }    
 }
 
@@ -285,24 +313,26 @@ input[type="date"]::before {
     height: 500px;
 }
 
-.loader-container-add-holder, .loader-container-edit-holder {
+.loader-container-add-holder,
+.loader-container-edit-holder,
+.loader-container-signup-holder {
     position: absolute;
+}
+
+.loader-container-add-holder .loader-container,
+.loader-container-edit-holder .loader-container,
+.loader-container-signup-holder .loader-container {
+    width: 100%;
+}
+
+.loader-container-signup-holder {
+    height: 300px;
 }
 
 .loader-container-add-holder {
     height: 430px;
 }
 
-.loader-container-add-holder .loader-container {
-    width: 100%;
-}
-
-
 .loader-container-edit-holder {
-    height: 410px;
-}
-
-.loader-container-edit-holder .loader-container {
-    width: 100%;
-    padding: 0;
+    height: 380px;
 }

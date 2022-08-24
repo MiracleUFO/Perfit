@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useUserContext } from '../../../context/userContext';
 import { useModalContext } from '../../../context/modalContext';
 
-import isEmpty from '../../../helpers/validate';
+import isFalsish from '../../../helpers/isFalsish';
 import baseUrl from '../../../helpers/baseUrl';
 import createImageUrl from '../../../helpers/createImageUrl';
 import initialCaps from '../../../helpers/initialsCaps';
@@ -70,7 +70,7 @@ const EditProfileForm = () => {
     //  Validates and submits user info
     const handleSubmit = async () => {
         const url = baseUrl();
-        const valid = isEmpty(userInfo);
+        const valid = isFalsish(userInfo);
 
         if (valid) {
             setUserInfo({...userInfo});
@@ -137,19 +137,19 @@ const EditProfileForm = () => {
     useEffect(() => setLoading(controls.loading), [controls.loading]);
     
     return (
-        <div className='animate__animated animate__backInLeft'>
+        <div className='animate__animated animate__backInLeft form-holder'>
             <p className='welcome-text'>
                 Hey {name}! Edit your profile.
             </p>
 
             <div className='form'>
+                {controls.loading 
+                    ?   <div className='loader-container-holder loader-container-edit-holder'>
+                            <Loader />
+                        </div>
+                    :   null
+                }
                 <div className='form input-container'>
-                    {controls.loading 
-                        ?   <div className='loader-container-holder loader-container-edit-holder'>
-                                <Loader />
-                            </div>
-                        :   ''
-                    }
                     <input
                         placeholder='First Name' 
                         name='firstName' 
@@ -202,8 +202,8 @@ const EditProfileForm = () => {
                             }
                         </div>
                         {controls.pfpWarningText ?
-                            <span className='pfp-text warning-text'>{controls.pfpWarningText}</span>
-                        :   <span className='pfp-text success-text'>**A picture of you with a solid, neutral background.</span>
+                            <span className='info-text warning-text'>{controls.pfpWarningText}</span>
+                        :   <span className='info-text success-text'>**A picture of you with a solid, neutral background.</span>
                         }
                         <br />
                     </>

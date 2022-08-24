@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useModalContext } from '../../../context/modalContext';
 
 import baseUrl from '../../../helpers/baseUrl';
+import { isMatch, passwordStrengthVal } from '../../../helpers/passwordValidator';
 import disableFutureDates from '../../../helpers/disableFutureDates';
 
 import Loader from '../../Loader';
@@ -25,15 +26,15 @@ const SignUpForm = () => {
     const 
         [controls, setControls] = useState({...initControls}),
         [authInfo, setAuthInfo] = useState({...initAuthInfo}),
-        { /*setVisible,*/ setType, setLoading } = useModalContext(),
+        { setVisible, setType, setLoading } = useModalContext(),
         location = useLocation()
     ;
 
-    /*const closeModal = () => {
+    const closeModal = () => {
         setVisible(false);
         setAuthInfo({...initAuthInfo});
         setControls({...initControls});
-    };*/
+    };
 
     const handleChange = (e) => setAuthInfo({...authInfo, [e.target.name]: e.target.value});
 
@@ -68,7 +69,7 @@ const SignUpForm = () => {
     useEffect(() => setLoading(controls.loading), [controls.loading]);
 
      //  Scrolls to control text at bottom of modal
-     /*useEffect(() => {
+     useEffect(() => {
         if (controls.successText || controls.failureText) {
             document.getElementById('status-text-signup-modal').scrollIntoView({alignToTop: false, behavior: 'smooth'});
         }
@@ -79,22 +80,22 @@ const SignUpForm = () => {
                 window.location.reload(false);
             }, 2000);
         }
-    }, [controls.failureText, controls.successText, controls.loading]);*/
+    }, [controls.failureText, controls.successText, controls.loading]);
 
     return (
-        <div className='animate__animated animate__backInLeft'>
+        <div className='animate__animated animate__backInLeft form-holder'>
             <p className='welcome-text'>
                 Hey Stranger! Join our community.
             </p>
 
             <form className='form' onSubmit={handleSubmit}>
+                {controls.loading 
+                    ?   <div className='loader-container-holder loader-container-signup-holder'>
+                            <Loader />
+                        </div>
+                    :   null
+                }
                 <div className='form input-container'>
-                    {controls.loading 
-                        ?   <div className='loader-container-holder loader-container-add-holder'>
-                                <Loader />
-                            </div>
-                        :   ''
-                    }
                     <input
                         required
                         placeholder='Email Address'
@@ -103,26 +104,46 @@ const SignUpForm = () => {
                         value={authInfo.email}
                         onChange={handleChange}
                     />
-                    <input
-                        required
-                        placeholder='Password'
-                        name='password'
-                        type='password' 
-                        value={authInfo.password}
-                        onChange={handleChange}
-                    />
-                    <input
-                        required
-                        placeholder='Confirm Password'
-                        name='confirmPass'
-                        type='password' 
-                        value={authInfo.confirmPass}
-                        onChange={handleChange}
-                    />
+                    <div className='input-flex-container'>
+                        <input
+                            required
+                            placeholder='Password'
+                            name='password'
+                            type='password'
+                            minLength='8'
+                            maxLength='20'
+                            value={authInfo.password}
+                            onChange={handleChange}
+                        />
+                        {
+                            passwordStrengthVal(authInfo.password) && 
+                            passwordStrengthVal(authInfo.password) !== 'medium' ? 
+                                <span
+                                    className='pass-strenght-info' 
+                                    style={{
+                                        backgroundColor: passwordStrengthVal(authInfo.password) === 'strong' ? 'var(--chrome-green)' : 'var(--failure-red)'
+                                    }}
+                                >
+                                    {passwordStrengthVal(authInfo.password)}
+                                </span> 
+                            :   null
+                        }
+                    </div>
+                    <>
+                        <input
+                            required
+                            placeholder='Confirm Password'
+                            name='confirmPass'
+                            type='password' 
+                            value={authInfo.confirmPass}
+                            onChange={handleChange}
+                        />
+                        {authInfo.confirmPass ? <span className='failure-text info-text'>{isMatch(authInfo.password, authInfo.confirmPass)}</span> : null}
+                    </>
                     <input
                         required
                         type='date'
-                        placeholder='Date of Birth'
+                        placeholder='Birth Date'
                         title='Pick your date of birth (this is for verification purposes.)'
                         name='dob'
                         value={authInfo.dob} 
