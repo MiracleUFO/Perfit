@@ -26,15 +26,9 @@ const SignUpForm = () => {
     const 
         [controls, setControls] = useState({...initControls}),
         [authInfo, setAuthInfo] = useState({...initAuthInfo}),
-        { setVisible, setType, setLoading } = useModalContext(),
+        { setType, setLoading } = useModalContext(),
         location = useLocation()
     ;
-
-    const closeModal = () => {
-        setVisible(false);
-        setAuthInfo({...initAuthInfo});
-        setControls({...initControls});
-    };
 
     const handleChange = (e) => setAuthInfo({...authInfo, [e.target.name]: e.target.value});
 
@@ -75,10 +69,7 @@ const SignUpForm = () => {
         }
         
         if (controls.successText) {
-            setTimeout(() => {
-                closeModal();
-                window.location.reload(false);
-            }, 2000);
+            setType('verify-message');
         }
     }, [controls.failureText, controls.successText, controls.loading]);
 

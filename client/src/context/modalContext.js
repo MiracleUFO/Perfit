@@ -8,8 +8,8 @@ const ModalContext = createContext({
 });
 
 export const ModalProvider = ({ children }) => {
-    const [type, setType] = useState('');
-    const [visible, setVisible] = useState(false);
+    const [type, setType] = useState('verify-message');
+    const [visible, setVisible] = useState(true);
     const [loading, setLoading] = useState(false);
 
     return (
