@@ -22,7 +22,7 @@ const signup = async (req, res, next) => {
     if (moment() <= moment(dob))
         return res.status(409).send({status: 409, error: 'Invalid date of birth.'});
     else if (moment().subtract(13, 'years') < moment(dob))
-        return res.status(409).send({status: 409, error: 'Must be at least 13 years old to join platform.'});
+        return res.status(409).send({status: 409, error: 'Sorry, must be at least 13 years old to join.'});
     
     const passError = passwordValidator(password, confirmPass);
     if (passError)

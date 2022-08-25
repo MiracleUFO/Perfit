@@ -51,26 +51,28 @@ const SignUpForm = () => {
                 dob
             }
         ;
-        axios.post(`${url}/api/auth/sign-up`, auth)
-            .then(res => {
-                setAuthInfo({...initAuthInfo});
-                setControls({...initControls, successText: res.data.message});
-            })
-            .catch(err => setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'}))
-        ;
+        if (
+            (password === confirmPass) && 
+            (passwordStrengthVal(password) === 'strong' || passwordStrengthVal(password) === 'medium')
+        )
+            axios.post(`${url}/api/auth/sign-up`, auth)
+                .then(res => {
+                    setAuthInfo({...initAuthInfo});
+                    setControls({...initControls, successText: res.data.message});
+                })
+                .catch(err => setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'}))
+            ;
     };
 
     useEffect(() => setLoading(controls.loading), [controls.loading]);
 
-     //  Scrolls to control text at bottom of modal
+     //  Scrolls to control bottom of modal and switches to verification modal when sign up is complete
      useEffect(() => {
         if (controls.successText || controls.failureText) {
             document.getElementById('status-text-signup-modal').scrollIntoView({alignToTop: false, behavior: 'smooth'});
         }
-        
-        if (controls.successText) {
-            setType('verify-message');
-        }
+
+        if (controls.successText) setTimeout(() => setType('verify-message'), 2500);
     }, [controls.failureText, controls.successText, controls.loading]);
 
     return (

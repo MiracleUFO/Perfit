@@ -48,7 +48,7 @@ const Modal = () => {
             <section className='modal-wrapper' onClick={closeModal}>
                 <div className='modal' onClick={e => e.stopPropagation()}>
                     {type.indexOf('message') !== -1 ? 
-                        <Message type={type} /> :
+                        <Message type={type} close={closeModal} /> :
                         <>
                             <div className='modal-form'>
                                 <section className='brand-wrapper'>

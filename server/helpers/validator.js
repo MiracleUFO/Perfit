@@ -18,7 +18,7 @@ const checkUserIdIsUnique = async (id) => {
 
 const passwordValidator = (password, confirmPass) => {
     let error = '';
-    
+    console.log(passwordStrength(password).id);
     if (password !== confirmPass)
         error = 'Confirm password not the same.';
     else {
