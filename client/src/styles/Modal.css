@@ -71,6 +71,7 @@
     width: 50%;
     height: 650px;
     border-radius: 0 12px 12px 0;
+    object-fit: cover;
 }
 
 @media screen and (min-width: 800px) {
@@ -142,6 +143,7 @@ input[type="date"]::before {
 
 input[type="date"] {
     color: transparent;
+    font-family: Arial; /* browser default is Courier 🤢 */
 }
 
 ::placeholder,
@@ -175,7 +177,7 @@ input[type="date"]::before {
     width: 38%;
 }
 
-.profile-picture-input, input[type="password"] {
+.profile-picture-input, .password-input {
     width: 100% !important;
 }
 

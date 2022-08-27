@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useUserContext } from '../../context/userContext';
 import { useModalContext } from '../../context/modalContext';
 import { addFormImg, editFormImg, signUpFormImg } from '../../constants/modalAssets';
 
@@ -7,6 +8,7 @@ import Message from './Message';
 import AddUserForm from './Forms/AddUserForm';
 import EditProfileForm from './Forms/EditUserForm';
 import SignUpForm from './Forms/SignUpForm';
+import SignInForm from './Forms/SignInForm';
 
 import '../../styles/Modal.css';
 import 'animate.css';
@@ -14,6 +16,7 @@ import 'animate.css';
 const Modal = () => {
     const 
         { loading, type, visible, setType, setVisible } = useModalContext(),
+        { currentUser } = useUserContext(),
         [imgAttrs, setImgAttrs] = useState({
             src: '',
             alt: ''
@@ -32,9 +35,19 @@ const Modal = () => {
                 case 'sign-up':
                     setImgAttrs({...signUpFormImg});
                     break;
+                case 'sign-in':
+                    setImgAttrs({...signUpFormImg});
+                    break;
             }
         }
     }, [type]);
+
+    useEffect(() => {
+        if (currentUser.email && !currentUser.verified) {
+            setType('verify-message');
+            setVisible(true);
+        }
+    }, [currentUser]);
 
     const closeModal = () => {
         if (!loading) {
@@ -57,6 +70,7 @@ const Modal = () => {
                                 {type === 'add-user' ? <AddUserForm /> : null}
                                 {type === 'edit-user' ? <EditProfileForm /> : null}
                                 {type === 'sign-up' ? <SignUpForm /> : null}
+                                {type === 'sign-in' ? <SignInForm /> : null}
                             </div>
 
                             <img className='section-img' {...imgAttrs} />

@@ -6,12 +6,12 @@ const Auth = require('../models/auth');
 const S_Token = require('../models/sessionTokens');
 const V_Token = require('../models/verificationTokens');
 
-const baseUrl = require('../helpers/baseUrl');
+const { serverBase, clientBase } = require('../config/baseUrls');
 const {
     required,
     checkUserIdIsUnique,
     passwordValidator
-} = require('../helpers/validator');
+} = require('../helpers/authValidator');
 
 const mailTransporter = require('../config/nodemailer');
 
@@ -24,16 +24,16 @@ const signup = async (req, res, next) => {
     } = req.body;
 
     if (!required({ email, password, confirmPass, dob }))
-        return res.status(400).json({status: 400, error: 'Required fields not sent.'});
+        return res.status(400).json({ status: 400, error: 'Required fields not sent.' });
 
-    const auth = await Auth.findOne({email: email});
+    const auth = await Auth.findOne({ email: email} );
     if (auth)
         return res.status(409).send({status: 409, error: 'User already exists.'});
     
     if (moment() <= moment(dob))
-        return res.status(409).send({status: 409, error: 'Invalid date of birth.'});
+        return res.status(409).send({ status: 409, error: 'Invalid date of birth.' });
     else if (moment().subtract(13, 'years') < moment(dob))
-        return res.status(409).send({status: 409, error: 'Sorry, must be at least 13 years old to join.'});
+        return res.status(409).send({ status: 409, error: 'Sorry, must be at least 13 years old to join.' });
     
     const passError = passwordValidator(password, confirmPass);
     if (passError)
@@ -56,14 +56,70 @@ const signup = async (req, res, next) => {
     try {
         newAuth = new Auth(formattedAuth);
         await newAuth.save();
-        return res.status(201).json({status: 201, message: 'Sign up successful.'});
+        req.id = newAuth.id;
+        sendVerificationEmail(req, res, next);
+    } catch (err) {
+        next(err);
+    }
+};
+
+const signin = async (req, res, next) => {
+    let 
+        { email, password } = req.body,
+        userId,
+        verified
+    ;
+    if (req.token) {
+        const { id } = jwt.verify(req.token, process.env.EMAIL_SECRET);
+        if (!id) return res.status(401).send({ status: 401, error: 'Invalid session.' });
+        userId = id;
+
+        const auth = await Auth.findOne({ owner_id: id });
+        if (!auth) return res.status(404).send({ status: 404, error: 'Account does not exist.' });
+
+        email = auth.email;
+        password = auth.password;
+        verified = auth.verified;
+    } else {
+        if (!email || !password) return res.status(400).json({ status: 400, error: 'Required fields not sent.' });
+        const auth = await Auth.findOne({ email });
+
+        if (!auth) return res.status(404).send({ status: 404, error: 'Account does not exist.' });
+        userId = auth.id;
+        verified = auth.verified;
+
+        const matches = await bcrypt.compare(password, auth.password);
+        if (!matches)  return res.status(400).json({ status: 400, error: 'Invalid login.' });
+    }
+
+    const jwtPayload = {
+        id: userId,
+        email,
+        password
+    };
+
+    const sToken = jwt.sign(jwtPayload, process.env.JWT_SECRET, { expiresIn: '3d' });
+    if (!sToken) return res.json(500).json({status: 500, error: 'JWT Error: Problem logging in.'});
+
+    const formattedSession = { owner_id: userId, s_token: sToken };
+
+    try {
+        newSession = new S_Token(formattedSession);
+        await newSession.save();
+        if (req.token) {
+            return setTimeout(() => {
+                //  redirects to client when / if verification token is used to automate login.
+                return res.writeHead(303, { Location: `${clientBase}/verify/${sToken}` }).end();
+            }, 2500);
+        }
+        return res.status(201).json({ status: 201, message: 'Login successful.', token: sToken, verified, id: userId, email });
     } catch (err) {
         next(err);
     }
 };
 
 const sendVerificationEmail = async (req, res, next) => {
-    const { id } = req.params;
+    const id = req.id || req.params.id;
     jwt.sign({ id }, process.env.EMAIL_SECRET, { expiresIn: '3d' },
         (err, token) => {
             if (err) return res.json(500).json({status: 500, error: 'JWT Error: Problem sending verification token.'});
@@ -79,7 +135,7 @@ const sendVerificationEmail = async (req, res, next) => {
                             if (!auth)
                                 return res.status(404).send({ status: 404, error: 'Account does not exist.' })
                             ;
-                            const url = `${baseUrl()}/api/auth/verify/${token}`;
+                            const url = `${serverBase}/api/auth/verify/${token}`;
                             mailTransporter.sendMail({
                                 from: process.env.GMAIL_USER,
                                 to: auth.email,
@@ -87,6 +143,8 @@ const sendVerificationEmail = async (req, res, next) => {
                                 text: `Hey you, please click this: ${url}, to verify yout Perfit freelancer account and add your profile`,
                                 html: `<div><h1>Hey you,</h1><p>Please click <a href="${url}">this link</a> to verify your Perfit freelancer account and add your profile.</p></div>`
                             });
+                            if (req.id)
+                                return res.status(201).json({status: 201, id: req.id, message: 'Sign up successful. \n Verification email sent.'});
                             return res.status(201).json({status: 201, message: 'Verification email sent successfully.'});
                         })
                     ;
@@ -98,44 +156,57 @@ const sendVerificationEmail = async (req, res, next) => {
     ;
 }
 
-const verify = (req, res) => {
+const verify = (req, res, next) => {
     const
         { token } = req.params,
         { id } = jwt.verify(token, process.env.EMAIL_SECRET)
     ;
     if (!id) return res.status(401).json({ status: 401, error: 'Unauthorised.' });
-    Auth.findOne({ id })
-        .then(auth => {
-            if (!auth) res.status(404).json({ status: 404, error: 'Account does not exist.' });
-            auth.verified = true;
-            auth.save();
-            res.status(201).json({ status: 201, message: 'Verified successfully' });
-        });
-};
 
-const getAuth = (req, res) => {
-    /*const token = req.headers['x-perfit-token'];
-    if (!token)
-        return res.status(401).json({ status: 401, error: 'Unauthorised.' });
-    ;
-    const { id } = jwt.verify(token, process.env.EMAIL_SECRET);
-    if (!id) 
-        return res.status(401).json({ status: 401, error: 'Unauthorised.' })
-    ;*/
-    const { id } = req.params;
-
-    Auth.findOne({ id })
-        .then(auth => {
-            if (!auth) return res.status(404).send({status: 404, error: 'User does not exist.'});
-            const { id, verified } = auth;
-            return res.status(200).json({ id, verified });
+    V_Token.findOneAndDelete({ v_token: token })
+        .then(vToken => {
+            if (!vToken) return res.status(401).json({ status: 401, error: 'Expired verification link.' });
+            Auth.findOne({ id })
+                .then(auth => {
+                    if (!auth) res.status(404).json({ status: 404, error: 'Account does not exist.' });
+                    if (auth.verified) return res.write(400, 'User is already verified.').end();
+                    auth.verified = true;
+                    auth.save();
+                    req.token = vToken.v_token;
+                    signin(req, res, next);
+                })
+            ;
         })
     ;
 };
 
+const getAuth = (req, res) => {
+    const id = req.params.id || req.id;
+    Auth.findOne({ id })
+        .then(auth => {
+            if (!auth) return res.status(404).send({status: 404, error: 'Account does not exist.'});
+            const { id, verified, email } = auth;
+            return res.status(200).json({ status: 200, email, id, verified });
+        })
+    ;
+};
+
+const isSTokenValid = async (req, res) => {
+    const { token } = req.params;
+    console.log('param token', token);
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('user id from jwt verify', id);
+    const sToken = await S_Token.findOne({ owner_id: id });
+    if (!id || !sToken) return res.status(401).send({ status: 401, error: 'Unauthorised.' });
+    req.id = id;
+    getAuth(req, res);
+};
+
 module.exports = {
     signup,
+    signin,
     getAuth,
     verify,
-    sendVerificationEmail
+    sendVerificationEmail,
+    isSTokenValid
 };

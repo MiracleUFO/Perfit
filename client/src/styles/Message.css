@@ -67,13 +67,30 @@
     width: 90%;
 }
 
-.message span:first-of-type {
+.message .header {
     padding-bottom: 8px;
     border-bottom: 1px dashed brown;
 }
 
-.message a {
+.message .timer-btn {
     font-size: 0.85em;
+    border: none;
+    color: #878CD4;
+    width: max-content;
+    background: none;
+    padding: inherit;
+}
+
+.message .timer-btn:hover:not([disabled]) {
+    font-size: 0.89em;
+}
+
+.message .close-icon:hover {
+    transform: scale(1.05);
+}
+
+.message .timer-btn:disabled {
+    color: #a1a1b1;
 }
 
 .message .close-icon {
@@ -82,12 +99,4 @@
     font-weight: 300;
     color: #4b5320;
     font-size: small;
-}
-
-.message a:hover {
-    font-size: 0.89em;
-}
-
-.message a:hover, .message .close-icon:hover {
-    transform: scale(1.15);
 }

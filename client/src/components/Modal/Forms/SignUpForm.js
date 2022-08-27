@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useModalContext } from '../../../context/modalContext';
+import { useUserContext } from '../../../context/userContext';
 
 import baseUrl from '../../../helpers/baseUrl';
 import { isMatch, passwordStrengthVal } from '../../../helpers/passwordValidator';
@@ -27,6 +28,7 @@ const SignUpForm = () => {
         [controls, setControls] = useState({...initControls}),
         [authInfo, setAuthInfo] = useState({...initAuthInfo}),
         { setType, setLoading } = useModalContext(),
+        { currentUser, setCurrentUser } = useUserContext(),
         location = useLocation()
     ;
 
@@ -35,7 +37,6 @@ const SignUpForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setControls({...controls, loading: true});
-
         const 
             url = baseUrl(),
             {
@@ -54,14 +55,18 @@ const SignUpForm = () => {
         if (
             (password === confirmPass) && 
             (passwordStrengthVal(password) === 'strong' || passwordStrengthVal(password) === 'medium')
-        )
+        ) {
+            localStorage.removeItem('perfit_user_id');
             axios.post(`${url}/api/auth/sign-up`, auth)
                 .then(res => {
                     setAuthInfo({...initAuthInfo});
                     setControls({...initControls, successText: res.data.message});
+                    localStorage.setItem('perfit_user_id', res.data.id);
+                    setCurrentUser({...currentUser, id: res.data.id});
                 })
                 .catch(err => setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'}))
             ;
+        }
     };
 
     useEffect(() => setLoading(controls.loading), [controls.loading]);
@@ -100,6 +105,7 @@ const SignUpForm = () => {
                     <div className='input-flex-container'>
                         <input
                             required
+                            className='password-input'
                             placeholder='Password'
                             name='password'
                             type='password'

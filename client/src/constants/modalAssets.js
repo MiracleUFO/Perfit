@@ -1,5 +1,5 @@
 export const addFormImg = {
-    src: 'https://res.cloudinary.com/perfit/image/upload/v1661199046/aggelosags-_yZlgzx0ng4-unsplash_jsx5on.jpg',
+    src: 'https://res.cloudinary.com/perfit/image/upload/v1661439827/arthur-mazi-a8CxRWIu8yw-unsplash-e1651170357711-810x522_apooep.jpg',
     alt: 'Blue sky and rooftop'
 };
 
@@ -9,6 +9,6 @@ export const editFormImg = {
 };
 
 export const signUpFormImg = {
-    src: 'https://www.publicbooks.org/wp-content/uploads/2022/05/arthur-mazi-a8CxRWIu8yw-unsplash-e1651170357711-810x522.jpg',
-    alt: 'Sidewalk with people on it and a blue body of water to the left'
+    src: 'https://res.cloudinary.com/perfit/image/upload/a_vflip/a_180/v1661439109/_DSC2505_rcjgx9.jpg',
+    alt: 'Glass paned house in front of deep blue sky'
 };

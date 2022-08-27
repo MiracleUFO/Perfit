@@ -1,5 +1,5 @@
 const User = require('../models/users');
-const { required } = require('../helpers/validator');
+const { required } = require('../helpers/authValidator');
 
 const createUser = async (data) => {
     const {

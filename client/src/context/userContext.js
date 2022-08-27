@@ -11,10 +11,17 @@ export const UserProvider = ({ children }) => {
     const [id, setId] = useState(null);
     const [name, setName] = useState('');
     const [justAdded, setJustAdded] = useState(false);
+    const [currentUser, setCurrentUser] = useState({
+        id: null,
+        verified: false,
+        email: '',
+        name: '',
+        avatar: ''
+    });
 
     return (
         <UserContext.Provider 
-            value={{ id, name, justAdded, setId, setName, setJustAdded }}
+            value={{ id, name, currentUser, setCurrentUser, justAdded, setId, setName, setJustAdded }}
         >
             {children}
         </UserContext.Provider>
