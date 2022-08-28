@@ -33,7 +33,7 @@ const AddProfileForm = () => {
         [userInfo, setUserInfo] = useState({...initUserInfo}),
         [controls, setControls] = useState({...initControls}),
         { setVisible, setType, setLoading } = useModalContext(),
-        { setJustAdded, currentUser } = useUserContext(),
+        { setJustAdded, currentUser, setCurrentUser } = useUserContext(),
         location = useLocation()
     ;
 
@@ -88,8 +88,6 @@ const AddProfileForm = () => {
             profilePictureFile,
         } = userInfo;
 
-        console.log(currentUser.email);
-
         if (currentUser.email)
             try {
                 const profilePicture = await createImageUrl(profilePictureUrl ||  profilePictureFile);
@@ -112,6 +110,7 @@ const AddProfileForm = () => {
                             setJustAdded(true);
                             setUserInfo({...initUserInfo});
                             setControls({...initControls, successText: res.data.message});
+                            setCurrentUser({...currentUser});
                         })
                         .catch(err => {
                             setUserInfo({...initUserInfo});

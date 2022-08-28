@@ -22,7 +22,7 @@ const ArrowToTop = () => {
         window.addEventListener('scroll', setVisibleLoc);
 
         return () => {
-            window.removeEventListener('scroll', setVisible);
+            window.removeEventListener('scroll', setVisibleLoc);
         };
     }, []);
 

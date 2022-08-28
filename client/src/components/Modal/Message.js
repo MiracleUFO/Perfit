@@ -25,7 +25,6 @@ const Message = ({ type, msg }) => {
             url = baseUrl(),
             id = localStorage.getItem('perfit_user_id')
         ;
-        console.log(id);
         axios.get(`${url}/api/auth/resend-verify-token/${id}`);
     };
     // Countdown handler / timer

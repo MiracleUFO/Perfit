@@ -54,6 +54,7 @@ const Users = () => {
         if (e.animationName === 'pulse') {
             e.target?.removeEventListener('animationend', beepAnimationContainer);
             setJustAdded(false);
+            window.location.reload();
         }
     };
 

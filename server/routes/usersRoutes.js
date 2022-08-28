@@ -14,6 +14,6 @@ router.post('/', isSTokenValid, getAuthMw, exists, addNewUser);
 
 router.get('/:id', getUser);
 
-router.put('/:id', editExistingUser);
+router.put('/:id', isSTokenValid, getAuthMw, exists, editExistingUser);
 
 module.exports = router;

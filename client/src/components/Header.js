@@ -48,22 +48,16 @@ const Header = ({ sToken }) => {
             if (url)
                 axios.get(url)
                     .then(res => {
-                        setCurrentUser({...currentUser, email: res.data.email, id: res.data.id, verified: res.data.verified });
+                        setCurrentUser({ ...currentUser, email: res.data.email, id: res.data.id, verified: res.data.verified });
                         setControls({ ...controls, isVerified: res.data.verified, hasAccount: !!res.data.id, validated: !!res.data.token });
                         !res.token ?? localStorage.setItem('perfit_user_session', res.token);
                     }).catch (e => {
                         console.log(e);
-                        setControls({...controls, hasAccount: false});
+                        setControls({ ...controls, hasAccount: false });
                     })
                 ;
             else setControls({...controls, hasAccount: false});
     }, [sToken, currentUser.id]);
-
-    useEffect(() => {
-        window.addEventListener('storage', () => {
-            window.location.reload();
-        });
-    }, []);
 
     //  Checks if user has added their profile to display avatar in header.
     useEffect(() => {
@@ -71,13 +65,32 @@ const Header = ({ sToken }) => {
         if (controls.validated && (currentUser.id || currentUser.id === 0)) {
             axios.get(`${url}/api/users/${currentUser.id}`)
                 .then(res => {
-                    setControls({...controls, addedProfile: true});
-                    setCurrentUser({...currentUser, name: `${res.data.firstName} ${res.data.lastName.charAt(0)}.`, avatar: res.data.profilePicture});
+                    setControls({ ...controls, addedProfile: true });
+                    setCurrentUser({ ...currentUser, name: `${res.data.firstName} ${res.data.lastName.charAt(0)}.`, avatar: res.data.profilePicture });
                 })
                 .catch(e => {
                     console.log(e);
-                    setControls({...controls, addedProfile: false});
+                    setControls({ ...controls, addedProfile: false });
                 });
+        }
+    }, [controls.validated]);
+
+    const logOut = () => {
+        const initUser = {
+            id: null,
+            verified: false,
+            email: '',
+            name: '',
+            avatar: ''
+        };
+        setCurrentUser({...initUser});
+        localStorage.removeItem('perfit_user_session');
+        setControls({...controls, validated: false, addedProfile: false, isVerified: false});
+    };
+
+    useEffect(() => {
+        if (!controls.validated && sToken && !currentUser.id) {
+            window.location.replace(window.location.href.split('verify')[0]);
         }
     }, [controls.validated]);
 
@@ -101,7 +114,7 @@ const Header = ({ sToken }) => {
                                                     pathname: '/user',
                                                     state: {id: currentUser.id}
                                                 }}>Profile</Link>
-                                                <button>Log out</button>
+                                                <button onClick={logOut}>Log out</button>
                                             </div>
                                         </div>
                                     </div>

@@ -14,19 +14,18 @@ nav {
 }
 
 nav .avatar-container-small {
-    width: 46px !important;
-    height: 46px !important;
+    width: 50px !important;
+    height: 50px !important;
     margin-right: 10px;
 }
 
 .header-avatar {
-    width: 75%;
     display: block;
     background-size: cover;
     width: -webkit-fill-available;
     box-sizing: border-box;
     margin: 10px;
-    filter: drop-shadow(1.5px 3.5px 1.5px rgba(50, 50, 50, 0.4));
+    filter: drop-shadow(1.5px 3.5px 1.5px rgba(50, 50, 50, 0.45));
 }
 
 .user-details-box {

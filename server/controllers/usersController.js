@@ -42,7 +42,8 @@ const getUser = async (req, res) => {
     User.findOne({ id: id })
         .then(user => {
             if (!user) return res.status(404).send({ status: 404, error: 'User does not exist.' });
-            const {  
+            const {
+                email,
                 firstName,
                 lastName,
                 occupation,
@@ -53,6 +54,7 @@ const getUser = async (req, res) => {
             } = user;
 
             const filteredUser = {
+                email,
                 firstName,
                 lastName,
                 occupation,

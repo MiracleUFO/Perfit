@@ -25,10 +25,11 @@ const User = () => {
         [id] = useState(location.state?.id),
         [loading, setLoading] = useState(false),
         { setVisible, setType } = useModalContext(),
-        { setId, setName } = useUserContext()
+        { setId, setName, currentUser } = useUserContext()
     ;
 
     const [userInfo, setUserInfo] = useState({
+        email: '',
         firstName: '',
         lastName: '',
         occupation: '',
@@ -57,6 +58,10 @@ const User = () => {
             ;
         }   else setLoading(false);
     },  [id]);
+
+    const occptnArticle = () => {
+        return ['a', 'e', 'i', 'o', 'u'].some(vowel => userInfo.occupation.toLowerCase().startsWith(vowel)) ? ' an ':   'a';
+    };
 
     if (loading) 
         return (
@@ -95,14 +100,19 @@ const User = () => {
                                         <div className='user-name-container'>
                                             <div className='animate__animated animate__fadeInRight'>
                                                 <h1>{userInfo.firstName} {userInfo.lastName}</h1>
-                                                <p>I&apos;m a(n) {userInfo.occupation} based in {userInfo.state}.</p>
+                                                <p>I&apos;m {occptnArticle()} {userInfo.occupation} based in {userInfo.state}.</p>
                                             </div>
-                                            <div 
-                                                className='edit-box animate__animated animate__fadeInUp'
-                                                onClick={displayEditUserForm}
-                                            >
-                                                Edit
-                                            </div>
+
+                                            {currentUser.email === userInfo.email ?
+                                                <div 
+                                                    className='edit-box animate__animated animate__fadeInUp'
+                                                    onClick={displayEditUserForm}
+                                                >
+                                                    Edit
+                                                </div>
+                                            :   null
+                                            }
+
                                         </div>
                                     </section>
 
@@ -111,13 +121,13 @@ const User = () => {
                                             <h2>About Me</h2>
                                             <p>
                                                 My name is {userInfo.firstName} {userInfo.lastName}.
-                                                I&apos;m a(n) {userInfo.occupation} based in {userInfo.state}, {userInfo.country}.
+                                                I&apos;m {occptnArticle()} {userInfo.occupation} based in {userInfo.state}, {userInfo.country}.
                                             </p>
                                             <p>
                                                 I specialise in {userInfo.keySkill}.
                                                 <span className='more'>..</span>
                                             </p>
-                                            <span>Hire me</span>
+                                            <span><a href={`mailto:${userInfo.email}`}>Hire me</a></span>
                                         </div>
 
                                         <div className='location animate__animated animate__fadeInRight'>

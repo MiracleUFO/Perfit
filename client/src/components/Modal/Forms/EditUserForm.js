@@ -36,7 +36,7 @@ const EditProfileForm = () => {
         [userInfo, setUserInfo] = useState({...initUserInfo}),
         [controls, setControls] = useState({...initControls}),
         { setVisible, setLoading } = useModalContext(),
-        { id, name } = useUserContext()
+        { id, name, currentUser } = useUserContext()
     ;
 
     const closeModal = () => {
@@ -91,6 +91,7 @@ const EditProfileForm = () => {
                     :   ''
                 ;
                 const user = {
+                    email: currentUser.email,
                     firstName,
                     lastName,
                     occupation,
@@ -100,7 +101,7 @@ const EditProfileForm = () => {
                     profilePicture
                 };
 
-                axios.put(`${url}/api/users/${id}`, user)
+                axios.put(`${url}/api/users/${id}`, user, {headers: {'x-auth-token': localStorage.getItem('perfit_user_session')}})
                     .then(() => {
                         setUserInfo({...initUserInfo});
                         setControls({...initControls, successText: 'User info edited successfully.'});
