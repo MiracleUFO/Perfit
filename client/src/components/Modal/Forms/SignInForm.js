@@ -53,8 +53,10 @@ const SignInForm = () => {
             .then(res => {
                 setAuthInfo({...initAuthInfo});
                 setControls({...initControls, successText: res.data.message});
-                localStorage.setItem('perfit_user_id', res.data.id);
-                localStorage.setItem('perfit_user_session', res.data.token);
+                
+                window.localStorage.setItem('perfit_user_id', res.data.id);
+                window.localStorage.setItem('perfit_user_session', res.data.token);
+                window.dispatchEvent(new Event('storage'));
             })
             .catch(err => setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'}))
         ;

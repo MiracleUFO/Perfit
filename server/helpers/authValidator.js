@@ -2,6 +2,7 @@ const { passwordStrength } = require('check-password-strength');
 const User = require('../models/users');
 
 const required = (req) => {
+    console.log(req);
     return Object.values(req).every(prop => !!prop);
 }
 

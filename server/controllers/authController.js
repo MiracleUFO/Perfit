@@ -181,25 +181,8 @@ const verify = (req, res, next) => {
 };
 
 const getAuth = (req, res) => {
-    const id = req.params.id || req.id;
-    Auth.findOne({ id })
-        .then(auth => {
-            if (!auth) return res.status(404).send({status: 404, error: 'Account does not exist.'});
-            const { id, verified, email } = auth;
-            return res.status(200).json({ status: 200, email, id, verified });
-        })
-    ;
-};
-
-const isSTokenValid = async (req, res) => {
-    const { token } = req.params;
-    console.log('param token', token);
-    const { id } = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('user id from jwt verify', id);
-    const sToken = await S_Token.findOne({ owner_id: id });
-    if (!id || !sToken) return res.status(401).send({ status: 401, error: 'Unauthorised.' });
-    req.id = id;
-    getAuth(req, res);
+    const { id, verified, email } = req.auth;
+    return res.status(200).json({ status: 200, email, id, verified, token: req.params.token });
 };
 
 module.exports = {
@@ -207,6 +190,5 @@ module.exports = {
     signin,
     getAuth,
     verify,
-    sendVerificationEmail,
-    isSTokenValid
+    sendVerificationEmail
 };

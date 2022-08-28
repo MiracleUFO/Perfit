@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const exists = require('../middlewares/Auth');
+const { exists, isSTokenValid, getAuthMw } = require('../middlewares/Auth');
 const {
     getUsers,
     addNewUser,
@@ -10,7 +10,7 @@ const {
 
 router.get('/', getUsers);
 
-router.post('/', exists, addNewUser);
+router.post('/', isSTokenValid, getAuthMw, exists, addNewUser);
 
 router.get('/:id', getUser);
 

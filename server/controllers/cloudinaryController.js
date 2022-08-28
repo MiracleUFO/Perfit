@@ -8,7 +8,8 @@ const uploadImage = async (req, res, next) => {
             transformation: [
                 {fetch_format: 'png', format: 'png'},
                 {gravity: 'face', effect: 'trim'},
-                {effect: 'bgremoval'}
+                {effect: 'bgremoval'},
+                {width: 300, height: 300}
             ]
         }
         ,

@@ -1,14 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const { 
+    exists,
+    getAuthMw,
+    isSTokenValid
+} = require('../middlewares/Auth');
 const {
     signup,
     signin,
     verify,
     getAuth,
-    sendVerificationEmail,
-    isSTokenValid
+    sendVerificationEmail
 } = require('../controllers/authController');
-const exists = require('../middlewares/Auth');
 
 router.post('/sign-up', signup);
 
@@ -18,11 +21,8 @@ router.get('/verify/:token', verify);
 
 router.get('/resend-verify-token/:id', sendVerificationEmail);
 
-router.get('/:id', getAuth);
+router.get('/:id', getAuthMw, getAuth);
 
-router.get('/is-token-valid/:token', isSTokenValid);
+router.get('/is-token-valid/:token', isSTokenValid, getAuthMw, getAuth);
 
 module.exports = router;
-
-//  Middlewares
-//  exists: allows user add profile, addProfile to know if exists in profile check if token is valid, then check if user exists in profile with id from token decryption

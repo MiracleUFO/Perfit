@@ -23,7 +23,6 @@ const Header = ({ sToken }) => {
         location = useLocation(),
         { setType, setVisible } = useModalContext()
     ;
-        
     const displayAddUserForm = (type) => {
         setVisible(true);
         setType(type);
@@ -36,44 +35,51 @@ const Header = ({ sToken }) => {
             id = localStorage.getItem('perfit_user_id')
         ;
 
+        if (sToken)
+            localStorage.setItem('perfit_user_session', sToken);
+
         if (sessionToken) 
             url = `${baseUrl()}/api/auth/is-token-valid/${sessionToken}`
         ;   else if (id)
                 url = `${baseUrl()}/api/auth/${id}`
             ;
 
-        console.log(currentUser, url, controls);
-
-        if (url)
-            axios.get(url)
-                .then(res => {
-                    console.log(res);
-
-                    setCurrentUser({ email: res.data.email, id: res.data.id, verified: res.data.verified });
-                    setControls({ ...controls, isVerified: res.data.verified, hasAccount: !!res.data.id, validated: !!res.data.token });
-                    !res.token ?? localStorage.setItem('perfit_user_session', res.token);
-                }).catch (e => {
-                    console.log(e);
-                    setControls({...controls, hasAccount: false});
-                });
-        else setControls({...controls, hasAccount: false});
+        if (!controls.validated)
+            if (url)
+                axios.get(url)
+                    .then(res => {
+                        setCurrentUser({...currentUser, email: res.data.email, id: res.data.id, verified: res.data.verified });
+                        setControls({ ...controls, isVerified: res.data.verified, hasAccount: !!res.data.id, validated: !!res.data.token });
+                        !res.token ?? localStorage.setItem('perfit_user_session', res.token);
+                    }).catch (e => {
+                        console.log(e);
+                        setControls({...controls, hasAccount: false});
+                    })
+                ;
+            else setControls({...controls, hasAccount: false});
     }, [sToken, currentUser.id]);
 
-    //  Check if user has added profile already.
+    useEffect(() => {
+        window.addEventListener('storage', () => {
+            window.location.reload();
+        });
+    }, []);
+
+    //  Checks if user has added their profile to display avatar in header.
     useEffect(() => {
         const url = baseUrl();
         if (controls.validated && (currentUser.id || currentUser.id === 0)) {
             axios.get(`${url}/api/users/${currentUser.id}`)
                 .then(res => {
-                    setCurrentUser({...currentUser, name: `${res.data.firstName} ${res.data.lastName.charAt(0)}.`, avatar: res.data.profilePicture});
                     setControls({...controls, addedProfile: true});
+                    setCurrentUser({...currentUser, name: `${res.data.firstName} ${res.data.lastName.charAt(0)}.`, avatar: res.data.profilePicture});
                 })
                 .catch(e => {
                     console.log(e);
                     setControls({...controls, addedProfile: false});
                 });
         }
-    }, [controls.validated, currentUser.id]);
+    }, [controls.validated]);
 
     return (
         <header>
@@ -86,8 +92,17 @@ const Header = ({ sToken }) => {
                                 controls.addedProfile ?
                                     <div className='header-user'>
                                         <div>
-                                            <img src={currentUser.profilePicture} alt={`${currentUser.name}'s avatar.`} />
-                                            <span>{currentUser.name}</span>
+                                            <div className='avatar-container-small'>
+                                                <img className='header-avatar' src={currentUser.avatar} alt={`${currentUser.name}'s avatar.`} />
+                                            </div>
+                                            <div className='user-details-box'>
+                                                <span>{currentUser.name}</span>
+                                                <Link to={{
+                                                    pathname: '/user',
+                                                    state: {id: currentUser.id}
+                                                }}>Profile</Link>
+                                                <button>Log out</button>
+                                            </div>
                                         </div>
                                     </div>
                                 :   <Link 

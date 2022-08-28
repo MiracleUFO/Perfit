@@ -115,10 +115,11 @@ const addNewUser = async (req, res, next) => {
         occupation,
         keySkill,
         profilePicture,
-        id
     } = req.body;
 
-    if (!required(req.body))
+    const id = req.id;
+
+    if (!required({ ...req.body, id }))
         return res.status(400).json({ status: 400, error: 'Required fields not sent.' })
     ;
 

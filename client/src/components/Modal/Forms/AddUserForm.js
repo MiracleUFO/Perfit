@@ -17,7 +17,6 @@ const AddProfileForm = () => {
         firstName: '',
         lastName: '',
         occupation: '',
-        dob: '',
         state: '',
         country: '',
         keySkill: '',
@@ -34,7 +33,7 @@ const AddProfileForm = () => {
         [userInfo, setUserInfo] = useState({...initUserInfo}),
         [controls, setControls] = useState({...initControls}),
         { setVisible, setType, setLoading } = useModalContext(),
-        { setJustAdded } = useUserContext(),
+        { setJustAdded, currentUser } = useUserContext(),
         location = useLocation()
     ;
 
@@ -79,11 +78,9 @@ const AddProfileForm = () => {
         setJustAdded(false);
 
         const {
-            email,
             firstName,
             lastName,
             occupation,
-            dob,
             state,
             country,
             keySkill,
@@ -91,37 +88,41 @@ const AddProfileForm = () => {
             profilePictureFile,
         } = userInfo;
 
-        try {
-            const profilePicture = await createImageUrl(profilePictureUrl ||  profilePictureFile);
+        console.log(currentUser.email);
 
-            if (profilePicture) {
-                const user = {
-                    email,
-                    firstName,
-                    lastName,
-                    occupation,
-                    dob,
-                    state,
-                    country,
-                    keySkill,
-                    profilePicture,
-                };
+        if (currentUser.email)
+            try {
+                const profilePicture = await createImageUrl(profilePictureUrl ||  profilePictureFile);
 
-                axios.post(`${url}/api/users`, user)
-                    .then(res => {
-                        setJustAdded(true);
-                        setUserInfo({...initUserInfo});
-                        setControls({...initControls, successText: res.data.message});
-                    })
-                    .catch(err => {
-                        setUserInfo({...initUserInfo});
-                        setControls({...initControls, failureText: err.response.data.error || 'Failed to add profile. Try again.'});
-                    });
+                if (profilePicture) {
+                    const user = {
+                        id: currentUser.id,
+                        email: currentUser.email,
+                        firstName,
+                        lastName,
+                        occupation,
+                        state,
+                        country,
+                        keySkill,
+                        profilePicture,
+                    };
+                    //  Sending 'add profile' req to server.
+                    axios.post(`${url}/api/users`, user, {headers: {'x-auth-token': localStorage.getItem('perfit_user_session')}})
+                        .then(res => {
+                            setJustAdded(true);
+                            setUserInfo({...initUserInfo});
+                            setControls({...initControls, successText: res.data.message});
+                        })
+                        .catch(err => {
+                            setUserInfo({...initUserInfo});
+                            setControls({...initControls, failureText: err.response.data.error || 'Failed to add profile. Try again.'});
+                        });
+                }
+            } catch(e) {
+                setUserInfo({...userInfo, profilePictureUrl: '', profilePictureFile: {}});
+                setControls({loading: false, failureText: 'Profile picture not uploaded successfully. Try again.'});
             }
-        } catch(e) {
-            setUserInfo({...userInfo, profilePictureUrl: '', profilePictureFile: {}});
-            setControls({loading: false, failureText: 'Profile picture not uploaded successfully. Try again.'});
-        }
+        else setControls({loading: false, failureText: 'Not authorised, please sign in.'});
     };
 
     //  Scrolls to control text at bottom of modal
@@ -142,7 +143,7 @@ const AddProfileForm = () => {
     return (
         <div className='animate__animated animate__backInLeft'>
             <p className='welcome-text'>
-                Hey Stranger! Join our community.
+                Hey you! Add your profile.
             </p>
 
             <form className='form' id='add-user-form' onSubmit={handleSubmit}>
@@ -165,14 +166,6 @@ const AddProfileForm = () => {
                         placeholder='Last Name' 
                         name='lastName' 
                         value={userInfo.lastName} 
-                        onChange={handleChange}
-                    />
-                    <input
-                        required
-                        placeholder='Email Address'
-                        name='email'
-                        type='email' 
-                        value={userInfo.email}
                         onChange={handleChange}
                     />
 
@@ -254,21 +247,21 @@ const AddProfileForm = () => {
                         />
                     </div>
                 </div>
-                <button>Join</button>
+                <button>Add Profile</button>
             </form>
 
-            <p id='status-text-add-modal'>
+            <p id='status-text-add-modal' className='status-text'>
                 <span className='success-text'>{controls.successText}</span>
                 <span className='failure-text'>{controls.failureText}</span>
             </p>
 
             <p className='have-account-text'>
-                Already have account?
+                Don&apos;t have an account?
                 <Link
                     to={{pathname: '/', state: {background: location}}}
-                    onClick={() => setType('sign-in')}
+                    onClick={() => setType('sign-up')}
                 >
-                    &nbsp;Sign In
+                    &nbsp;Sign Up
                 </Link>
             </p>
         </div>
