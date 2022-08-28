@@ -5,7 +5,7 @@ import { useModalContext } from '../../../context/modalContext';
 import { useUserContext } from '../../../context/userContext';
 
 import baseUrl from '../../../helpers/baseUrl';
-import { isMatch, passwordStrengthVal } from '../../../helpers/passwordValidator';
+import { isMatch, passwordStrengthVal, passwordDiversity } from '../../../helpers/passwordValidator';
 import disableFutureDates from '../../../helpers/disableFutureDates';
 
 import Loader from '../../Loader';
@@ -27,12 +27,20 @@ const SignUpForm = () => {
     const 
         [controls, setControls] = useState({...initControls}),
         [authInfo, setAuthInfo] = useState({...initAuthInfo}),
+        [passwordType, setPasswordType] = useState('password'),
         { setType, setLoading } = useModalContext(),
         { currentUser, setCurrentUser } = useUserContext(),
         location = useLocation()
     ;
 
-    const handleChange = (e) => setAuthInfo({...authInfo, [e.target.name]: e.target.value});
+    const togglePasswordsVisibility = (checked) => setPasswordType(checked ? 'text' : 'password');
+
+    const handleChange = (e) => {
+        setAuthInfo({...authInfo, [e.target.name]: e.target.value});
+        if (e.target.type === 'password') {
+            console.log(passwordDiversity(e.target.value));
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -102,38 +110,53 @@ const SignUpForm = () => {
                         value={authInfo.email}
                         onChange={handleChange}
                     />
-                    <div className='input-flex-container'>
-                        <input
-                            required
-                            className='password-input'
-                            placeholder='Password'
-                            name='password'
-                            type='password'
-                            minLength='8'
-                            maxLength='20'
-                            value={authInfo.password}
-                            onChange={handleChange}
-                        />
-                        {
-                            passwordStrengthVal(authInfo.password) && 
-                            passwordStrengthVal(authInfo.password) !== 'medium' ? 
-                                <span
-                                    className='pass-strenght-info' 
-                                    style={{
-                                        backgroundColor: passwordStrengthVal(authInfo.password) === 'strong' ? 'var(--chrome-green)' : 'var(--failure-red)'
-                                    }}
-                                >
-                                    {passwordStrengthVal(authInfo.password)}
-                                </span> 
-                            :   null
+                    <>
+                        <div className='input-flex-container'>
+                            <input
+                                required
+                                className='password-input'
+                                placeholder='Password'
+                                name='password'
+                                type={passwordType}
+                                minLength='8'
+                                maxLength='20'
+                                value={authInfo.password}
+                                onChange={handleChange}
+                            />
+                            {
+                                passwordStrengthVal(authInfo.password) && 
+                                passwordStrengthVal(authInfo.password) !== 'medium' ? 
+                                    <span
+                                        className='pass-strenght-info' 
+                                        style={{
+                                            backgroundColor: passwordStrengthVal(authInfo.password) === 'strong' ? 'var(--chrome-green)' : 'var(--failure-red)'
+                                        }}
+                                    >
+                                        {passwordStrengthVal(authInfo.password)}
+                                    </span> 
+                                :   null
+                            }
+                        </div>
+                        {(authInfo.password.length < 8 && authInfo.password) || passwordDiversity(authInfo.password) ?
+                            <span className='failure-text info-text'>
+                                {authInfo.password.length < 8 && authInfo.password ?
+                                    <>**{8 - authInfo.password.length} more characters</>
+                                :   null
+                                }
+                                {passwordDiversity(authInfo.password) ?
+                                    <>&nbsp;**add {passwordDiversity(authInfo.password)}</>
+                                :   null
+                            }
+                            </span>
+                        :   null
                         }
-                    </div>
+                    </>
                     <>
                         <input
                             required
                             placeholder='Confirm Password'
                             name='confirmPass'
-                            type='password' 
+                            type={passwordType}
                             value={authInfo.confirmPass}
                             onChange={handleChange}
                         />
@@ -150,13 +173,20 @@ const SignUpForm = () => {
                         max={disableFutureDates()}
                     />
                 </div>
+                <div className='checkbox-holder'>
+                    <input type='checkbox' id='password-toggler' onClick={(e) => togglePasswordsVisibility(e.target.checked)} />
+                    <label htmlFor='password-toggler'>Show Password</label>
+                </div>
                 <button>Join</button>
             </form>
 
-            <p id='status-text-signup-modal' className='status-text'>
-                <span className='success-text'>{controls.successText}</span>
-                <span className='failure-text'>{controls.failureText}</span>
-            </p>
+            {controls.successText || controls.failureText ?
+                <p id='status-text-signup-modal' className='status-text'>
+                    <span className='success-text'>{controls.successText}</span>
+                    <span className='failure-text'>{controls.failureText}</span>
+                </p>
+            :   null
+            }
 
             <p className='have-account-text'>
                 Already have account?

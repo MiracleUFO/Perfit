@@ -241,10 +241,13 @@ const EditProfileForm = () => {
                 <button onClick={handleSubmit}>Save</button>
             </div>
 
-            <p id='status-text-edit-modal' className='status-text'>
-                <span className='success-text'>{controls.successText}</span>
-                <span className='failure-text'>{controls.failureText}</span>
-            </p>
+            {controls.successText || controls.failureText ?
+                <p id='status-text-signup-modal' className='status-text'>
+                    <span className='success-text'>{controls.successText}</span>
+                    <span className='failure-text'>{controls.failureText}</span>
+                </p>
+            :   null
+            }
         </div>
     );
 };

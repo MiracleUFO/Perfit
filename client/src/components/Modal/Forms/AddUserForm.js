@@ -249,10 +249,13 @@ const AddProfileForm = () => {
                 <button>Add Profile</button>
             </form>
 
-            <p id='status-text-add-modal' className='status-text'>
-                <span className='success-text'>{controls.successText}</span>
-                <span className='failure-text'>{controls.failureText}</span>
-            </p>
+            {controls.successText || controls.failureText ?
+                <p id='status-text-signup-modal' className='status-text'>
+                    <span className='success-text'>{controls.successText}</span>
+                    <span className='failure-text'>{controls.failureText}</span>
+                </p>
+            :   null
+            }
 
             <p className='have-account-text'>
                 Don&apos;t have an account?

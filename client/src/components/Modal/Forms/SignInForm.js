@@ -22,9 +22,12 @@ const SignInForm = () => {
     const 
         [controls, setControls] = useState({...initControls}),
         [authInfo, setAuthInfo] = useState({...initAuthInfo}),
+        [passwordType, setPasswordType] = useState('password'),
         { setType, setLoading, setVisible } = useModalContext(),
         location = useLocation()
     ;
+
+    const togglePasswordsVisibility = (checked) => setPasswordType(checked ? 'text' : 'password');
 
     // Closes the modal when actions are finished on form
     const closeModal = () => {
@@ -105,7 +108,7 @@ const SignInForm = () => {
                             placeholder='Password'
                             className='password-input'
                             name='password'
-                            type='password'
+                            type={passwordType}
                             minLength='8'
                             maxLength='20'
                             value={authInfo.password}
@@ -113,13 +116,20 @@ const SignInForm = () => {
                         />
                     </div>
                 </div>
+                <div className='checkbox-holder'>
+                    <input type='checkbox' id='password-toggler' onClick={(e) => togglePasswordsVisibility(e.target.checked)} />
+                    <label htmlFor='password-toggler'>Show Password</label>
+                </div>
                 <button>Sign In</button>
             </form>
 
-            <p id='status-text-signin-modal' className='status-text'>
-                <span className='success-text'>{controls.successText}</span>
-                <span className='failure-text'>{controls.failureText}</span>
-            </p>
+            {controls.successText || controls.failureText ?
+                <p id='status-text-signup-modal' className='status-text'>
+                    <span className='success-text'>{controls.successText}</span>
+                    <span className='failure-text'>{controls.failureText}</span>
+                </p>
+            :   null
+            }
 
             <p className='have-account-text'>
                 Don&apos;t have an account?
