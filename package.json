@@ -1,26 +1,18 @@
 {
-  "name": "perfit",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js",
-    "heroku-postbuild": "cd client && npm install && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "client": "npm start --prefix client",
-    "dev": "concurrently \"node app.js\" \"npm run client\""
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "cloudinary": "^1.30.0",
-    "concurrently": "^7.3.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "git": "^0.1.5",
-    "mongodb": "^4.7.0",
-    "mongoose": "^6.3.6",
-    "node-fetch": "^2.6.1"
-  }
+    "name": "perfit",
+    "author": "Miracle Ufodiama",
+    "license": "ISC",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server",
+    "scripts": {
+        "client": "npm start --prefix client",
+        "start": "cd server && npm install && node app.js",
+        "heroku-postbuild": "cd client && npm install && npm run build",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "concurrently \"nodemon server/app.js\" \"npm run client\""
+    },
+    "engines": {
+        "node": "16.14.2"
+    }
 }

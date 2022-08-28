@@ -1,0 +1,1 @@
+export const acceptedImageFormats = ['png', 'jpeg', 'jpg', 'jfif', 'pjpeg', 'pjp'];

@@ -11,7 +11,7 @@ const createImageUrl = async (image) => {
 
         return new Promise((resolve, reject) => {
             reader.onloadend = () => {
-                axios.post(`${url}/api/upload`, {fileString: reader.result})
+                axios.post(`${url}/api/cloudinary/upload`, { fileString: reader.result })
                     .then(res => resolve(res.data.url))
                     .catch(err => reject(err));
             };

@@ -1,0 +1,31 @@
+.arrow-up-btn {
+    width: 10vw;
+    height: 10vw;
+    border-radius: 50%;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+    border: none;
+    background: white;
+    position: fixed;
+    left: calc(100% - 14vw);
+    top: 85vh;
+    font-size: 1.3em;
+    z-index: 2;
+    cursor: pointer;
+    filter: drop-shadow(1.5px 3px 1.5px rgba(50, 50, 50, 0.2));
+}
+
+.arrow-up-btn:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(1.5px 3px 1.5px rgba(50, 50, 50, 0.3));
+}
+
+@media (min-width: 800px) {
+    .arrow-up-btn {
+        width: 5vw;
+        height: 5vw;
+        left: calc(100% - 8vw);
+        font-size: 1.5em;
+    }
+}

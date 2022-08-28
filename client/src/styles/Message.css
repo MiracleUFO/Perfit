@@ -1,0 +1,102 @@
+.message-modal, .message {
+    display: flex;
+    justify-content: stretch;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    max-height: 320px;
+}
+
+.message > div:nth-child(1) {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: rgb(68,215,168);
+    background: linear-gradient(25deg, rgba(68, 215, 168, 0.3) 50%, rgba(141, 95, 211, 0.5) 95%);
+    min-height: 320px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.message > div:nth-child(2) {
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(68, 215, 168, 0.3);
+    border-radius: 12px;
+    width: 50%;
+    display: none;
+}
+
+@media screen and (min-width: 800px) {
+    .message > div:nth-child(1) {
+        width: 50%;
+        padding-left: 20px;
+        text-align: left;
+        background: #f5efef;
+    }
+
+    .message > div:nth-child(1)::after {
+        content: "";
+        position: absolute;
+        background-color: #f5efef;
+        z-index: 30;
+        width: 100px;
+        height: 340px;
+        border-radius: 50%;
+        left: calc(100% - 50px);
+        animation-name: backInLeft;
+        animation-duration: 1s;
+    }
+
+    .message > div:nth-child(2) {
+        display: flex;
+    }
+}
+
+.message img {
+    width: 50% !important;
+    position: relative;
+    left: 2em;
+    filter: drop-shadow(-0.2em 0.32em 0.09em #4b5320) drop-shadow(35em 1em 20em #4b5320);
+}
+
+.message span {
+    width: 90%;
+}
+
+.message .header {
+    padding-bottom: 8px;
+    border-bottom: 1px dashed brown;
+}
+
+.message .timer-btn {
+    font-size: 0.85em;
+    border: none;
+    color: #878CD4;
+    width: max-content;
+    background: none;
+    padding: inherit;
+}
+
+.message .timer-btn:hover:not([disabled]) {
+    font-size: 0.89em;
+}
+
+.message .close-icon:hover {
+    transform: scale(1.05);
+}
+
+.message .timer-btn:disabled {
+    color: #a1a1b1;
+}
+
+.message .close-icon {
+    left: 97.7%;
+    top: -3%;
+    font-weight: 300;
+    color: #4b5320;
+    font-size: small;
+}

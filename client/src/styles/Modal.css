@@ -32,7 +32,7 @@
 }
 
 .brand-wrapper {
-    width: 100%;
+    width: 90%;
     border-bottom: 1px solid rgba(220, 220, 220, 0.35);
 }
 
@@ -41,13 +41,9 @@
     margin-right: 2%;
 }
 
-.brand-wrapper,
-.welcome-text {
-    align-self: flex-start;
-}
-
 .welcome-text {
     font-size: 1.12em;
+    align-self: flex-start;
 }
 
 .close-icon {
@@ -59,6 +55,11 @@
 }
 
 @media screen and (min-width: 800px) {
+    .welcome-text {
+        position: relative;
+        left: -0.5em;
+    }
+
     .close-icon {
         top: 20px;
         left: 95%;
@@ -70,6 +71,7 @@
     width: 50%;
     height: 650px;
     border-radius: 0 12px 12px 0;
+    object-fit: cover;
 }
 
 @media screen and (min-width: 800px) {
@@ -89,6 +91,7 @@
 
 .modal-form .form {
     padding-bottom: 3px !important;
+    width: 100%;
 }
 
 .modal-form {
@@ -101,9 +104,17 @@
 
 @media screen and (min-width: 800px) {
     .modal-form {
-        width: 40%;
+        width: 45%;
         height: 650px;
+        justify-content: space-evenly;
     }
+}
+
+.form-holder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
   
 .modal-form input,
@@ -117,12 +128,22 @@ select {
     background-color: #ECF3FF;
 }
 
+input:focus {
+    outline: none;
+    border: 2px groove rgba(15, 111, 225, 0.3);
+    box-shadow: 5px 4px 5px 1px aliceblue, 
+                    -5px 4px 5px 1px aliceblue,
+                    5px -4px 5px 1px aliceblue
+    ;
+}
+
 input[type="date"]::before {
     content: attr(placeholder);
 }
 
 input[type="date"] {
     color: transparent;
+    font-family: Arial; /* browser default is Courier 🤢 */
 }
 
 ::placeholder,
@@ -156,11 +177,11 @@ input[type="date"]::before {
     width: 38%;
 }
 
-.profile-picture-input {
+.profile-picture-input, .password-input {
     width: 100% !important;
 }
 
-.file-label {
+.file-label, .pass-strenght-info {
     align-self: center;
     position: absolute;
     font-size: 0.75em;
@@ -175,6 +196,17 @@ input[type="date"]::before {
     text-align: center;
 }
 
+.pass-strenght-info {
+    left: calc(100% - 4.7em);
+    font-size: 0.7em;
+    border: none;
+    height: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 7px 0 7px 7px
+}
+
 .file-name {
     position: absolute;
     left: 3%;
@@ -186,8 +218,14 @@ input[type="date"]::before {
     display: flex;
     justify-content: space-between;
     width: 30%;
-    min-width: max-content;
     cursor: pointer;
+}
+
+.file-name > span:first-child {
+    max-width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media screen and (min-width: 800px) {
@@ -240,21 +278,63 @@ input[type="date"]::before {
     }
 }
 
+.status-text {
+    text-align: center;
+}
+
+.success-text, .failure-text, .warning-text {
+    font-weight: 400;
+}
+
+.success-text {
+    color: var(--chrome-green);
+}
+
+.warning-text {
+    color: var(--warning-yellow);
+}
+
+.failure-text {
+    color: var(--failure-red);
+}
+
+.info-text {
+    font-size: 0.75em;
+    width: calc(90% + 2em);
+}
+
+@media screen and (min-width: 800px) {
+    .info-text {
+        width: calc(100% + 2em);
+        margin-bottom: 10px;
+    }    
+}
+
 .loader-container-holder {
     width: 120%;
     height: 500px;
 }
 
-.loader-container-add-holder, .loader-container-edit-holder {
+.loader-container-add-holder,
+.loader-container-edit-holder,
+.loader-container-signup-holder {
     position: absolute;
 }
 
+.loader-container-add-holder .loader-container,
+.loader-container-edit-holder .loader-container,
+.loader-container-signup-holder .loader-container {
+    width: 100%;
+}
+
+.loader-container-signup-holder {
+    height: 300px;
+}
+
+.loader-container-add-holder {
+    height: 430px;
+}
 
 .loader-container-edit-holder {
     height: 380px;
-}
-
-.loader-container-edit-holder .loader-container {
-    width: 100%;
-    padding: 0;
 }
