@@ -22,9 +22,12 @@ const SignInForm = () => {
     const 
         [controls, setControls] = useState({...initControls}),
         [authInfo, setAuthInfo] = useState({...initAuthInfo}),
+        [passwordType, setPasswordType] = useState('password'),
         { setType, setLoading, setVisible } = useModalContext(),
         location = useLocation()
     ;
+
+    const togglePasswordsVisibility = (checked) => setPasswordType(checked ? 'text' : 'password');
 
     // Closes the modal when actions are finished on form
     const closeModal = () => {
@@ -53,10 +56,9 @@ const SignInForm = () => {
             .then(res => {
                 setAuthInfo({...initAuthInfo});
                 setControls({...initControls, successText: res.data.message});
-                
-                window.localStorage.setItem('perfit_user_id', res.data.id);
-                window.localStorage.setItem('perfit_user_session', res.data.token);
-                window.dispatchEvent(new Event('storage'));
+                localStorage.setItem('perfit_user_id', res.data.id);
+                localStorage.setItem('perfit_user_session', res.data.token);
+                window.location.replace(window.location.href.split('reset')[0]);
             })
             .catch(err => setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'}))
         ;
@@ -77,10 +79,19 @@ const SignInForm = () => {
         ;
     }, [controls.failureText, controls.successText, controls.loading]);
 
+    const sendForgotPasswordEmail = () => {
+        const 
+            url = baseUrl(),
+            id = localStorage.getItem('perfit_user_id')
+        ;
+        axios.get(`${url}/api/auth/forgot-password/${id}`);
+        setType('forgot-password-message');
+    };
+
     return (
         <div className='animate__animated animate__backInLeft form-holder'>
             <p className='welcome-text'>
-                Hey Stranger! Sign in here.
+                Hey Stranger! Sign in.
             </p>
 
             <form className='form' onSubmit={handleSubmit}>
@@ -105,7 +116,7 @@ const SignInForm = () => {
                             placeholder='Password'
                             className='password-input'
                             name='password'
-                            type='password'
+                            type={passwordType}
                             minLength='8'
                             maxLength='20'
                             value={authInfo.password}
@@ -113,13 +124,34 @@ const SignInForm = () => {
                         />
                     </div>
                 </div>
+
+                <div className='signin-flex-container'>
+                    <div className='checkbox-holder'>
+                        <input
+                            type='checkbox'
+                            id='password-toggler'
+                            onClick={(e) => togglePasswordsVisibility(e.target.checked)}
+                        />
+                        <label htmlFor='password-toggler'>Show Password</label>
+                    </div>
+                    <div className='have-account-text'>
+                        <Link
+                            to={{pathname: '/', state: {background: location}}}
+                            onClick={sendForgotPasswordEmail}
+                        >
+                            Forgot Password? 
+                        </Link>
+                    </div>
+                </div>
                 <button>Sign In</button>
             </form>
 
-            <p id='status-text-signin-modal' className='status-text'>
-                <span className='success-text'>{controls.successText}</span>
-                <span className='failure-text'>{controls.failureText}</span>
-            </p>
+            {controls.successText || controls.failureText ?
+                <p id='status-text-signin-modal' className='status-text'>
+                    <span className='success-text'>{controls.successText}</span>
+                    <span className='failure-text'>{controls.failureText}</span>
+                </p>
+            :   null}
 
             <p className='have-account-text'>
                 Don&apos;t have an account?

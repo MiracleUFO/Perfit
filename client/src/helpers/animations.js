@@ -9,6 +9,14 @@ export const scrollDown = (top) => {
         });
 };
 
+export const scrollToTop = () => {
+    window.scroll({
+        top: 0,
+        left: 100,
+        behavior: 'smooth'
+    });
+};
+
 export const beep = (el, container) => {
     if (document.readyState === 'complete') {
         const animationClasses = ['animate__animated', 'animate__pulse'];

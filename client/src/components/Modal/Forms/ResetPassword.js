@@ -2,22 +2,18 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useModalContext } from '../../../context/modalContext';
-import { useUserContext } from '../../../context/userContext';
 
 import baseUrl from '../../../helpers/baseUrl';
 import { isMatch, passwordStrengthVal, passwordDiversity } from '../../../helpers/passwordValidator';
-import disableFutureDates from '../../../helpers/disableFutureDates';
 
 import Loader from '../../Loader';
 
 import 'animate.css';
 
-const SignUpForm = () => {
+const ResetPasswordForm = () => {
     const initAuthInfo = {
-        email: '',
         password: '',
-        confirmPass: '',
-        dob: ''
+        confirmPass: ''
     };
     const initControls = {
         successText: '',
@@ -28,12 +24,20 @@ const SignUpForm = () => {
         [controls, setControls] = useState({...initControls}),
         [authInfo, setAuthInfo] = useState({...initAuthInfo}),
         [passwordType, setPasswordType] = useState('password'),
-        { setType, setLoading } = useModalContext(),
-        { currentUser, setCurrentUser } = useUserContext(),
-        location = useLocation()
+        { setType, setLoading, setVisible } = useModalContext(),
+        location = useLocation(),
+        search = location.search,
+        token = new URLSearchParams(search).get('rToken')
     ;
 
     const togglePasswordsVisibility = (checked) => setPasswordType(checked ? 'text' : 'password');
+
+    // Closes the modal when actions are finished on form
+    const closeModal = () => {
+        setVisible(false);
+        setAuthInfo({...initAuthInfo});
+        setControls({...initControls});
+    };
 
     const handleChange = (e) => setAuthInfo({...authInfo, [e.target.name]: e.target.value});
 
@@ -43,50 +47,47 @@ const SignUpForm = () => {
         const 
             url = baseUrl(),
             {
-                email,
                 password,
-                confirmPass,
-                dob
+                confirmPass
             } = authInfo,
             auth = {
-                email,
                 password,
-                confirmPass,
-                dob
+                confirmPass
             }
         ;
         if (
             (password === confirmPass) && 
             (passwordStrengthVal(password) === 'strong' || passwordStrengthVal(password) === 'medium')
-        ) {
-            localStorage.removeItem('perfit_user_id');
-            axios.post(`${url}/api/auth/sign-up`, auth)
+        )
+            axios.post(`${url}/api/auth/reset-password/${token}`, auth)
                 .then(res => {
                     setAuthInfo({...initAuthInfo});
                     setControls({...initControls, successText: res.data.message});
-                    localStorage.setItem('perfit_user_id', res.data.id);
-                    setCurrentUser({...currentUser, id: res.data.id});
+                    setType('sign-in');
                 })
-                .catch(err => setControls({...initControls, failureText: err.response.data.error || 'Failed to sign up. Try again.'}))
+                .catch(err => setControls({...initControls, failureText: err.response.data.error || 'Failed to reset. Try again.'}))
             ;
-        }
     };
 
     useEffect(() => setLoading(controls.loading), [controls.loading]);
 
-     //  Scrolls to control bottom of modal and switches to verification modal when sign up is complete
-     useEffect(() => {
-        if (controls.successText || controls.failureText) {
-            document.getElementById('status-text-signup-modal').scrollIntoView({alignToTop: false, behavior: 'smooth'});
-        }
+    //  Scrolls to control bottom of modal and switches to verification modal when sign up is complete
+    useEffect(() => {
+        if (controls.successText || controls.failureText)
+            document.getElementById('status-text-reset-modal').scrollIntoView({alignToTop: false, behavior: 'smooth'})
+        ;
 
-        if (controls.successText) setTimeout(() => setType('verify-message'), 2500);
+        if (controls.successText)
+            setTimeout(() => {
+                closeModal();
+            }, 2000)
+        ;
     }, [controls.failureText, controls.successText, controls.loading]);
 
     return (
         <div className='animate__animated animate__backInLeft form-holder'>
             <p className='welcome-text'>
-                Hey Stranger! Join our community.
+                Reset your password.
             </p>
 
             <form className='form' onSubmit={handleSubmit}>
@@ -97,14 +98,6 @@ const SignUpForm = () => {
                     :   null
                 }
                 <div className='form input-container'>
-                    <input
-                        required
-                        placeholder='Email Address'
-                        name='email'
-                        type='email' 
-                        value={authInfo.email}
-                        onChange={handleChange}
-                    />
                     <>
                         <div className='input-flex-container'>
                             <input
@@ -157,43 +150,36 @@ const SignUpForm = () => {
                         />
                         {authInfo.confirmPass ? <span className='failure-text info-text'>{isMatch(authInfo.password, authInfo.confirmPass)}</span> : null}
                     </>
-                    <input
-                        required
-                        type='date'
-                        placeholder='Birth Date'
-                        title='Pick your date of birth (this is for verification purposes.)'
-                        name='dob'
-                        value={authInfo.dob} 
-                        onChange={handleChange}
-                        max={disableFutureDates()}
-                    />
                 </div>
                 <div className='checkbox-holder'>
-                    <input type='checkbox' id='password-toggler' onClick={(e) => togglePasswordsVisibility(e.target.checked)} />
+                    <input
+                        type='checkbox'
+                        id='password-toggler'
+                        onClick={(e) => togglePasswordsVisibility(e.target.checked)}
+                    />
                     <label htmlFor='password-toggler'>Show Password</label>
                 </div>
-                <button>Join</button>
+                <button>Reset</button>
             </form>
 
             {controls.successText || controls.failureText ?
-                <p id='status-text-signup-modal' className='status-text'>
+                <p id='status-text-reset-modal' className='status-text'>
                     <span className='success-text'>{controls.successText}</span>
                     <span className='failure-text'>{controls.failureText}</span>
                 </p>
             :   null
             }
-
             <p className='have-account-text'>
-                Already have account?
+                Don&apos;t have an account?
                 <Link
                     to={{pathname: '/', state: {background: location}}}
-                    onClick={() => setType('sign-in')}
+                    onClick={() => setType('sign-up')}
                 >
-                    &nbsp;Sign In
+                    &nbsp;Sign Up
                 </Link>
             </p>
         </div>
     );
 };
 
-export default SignUpForm;
+export default ResetPasswordForm;

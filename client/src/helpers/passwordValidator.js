@@ -13,3 +13,13 @@ export const passwordStrengthVal = pass => {
     }
     return null;
 };
+
+export const passwordDiversity = pass => {
+    if (pass) {
+        const allDiversity = ['lowercase', 'uppercase', 'symbol', 'number'];
+        const passDiversity = passwordStrength(pass).contains;
+        const diversity = allDiversity.filter(divty => !passDiversity.includes(divty));
+        return diversity[0];
+    }
+    return null;
+};
