@@ -17,27 +17,35 @@ const Message = ({ type, msg }) => {
             minutes: 0,
         })
     ;
-    const resendVerificationCode = () => {
-        if (countdown.minutes === 0 && countdown.seconds === 0) {
-            setCountDown({seconds: 59, minutes: 5});
-        }
+    const restartTimer = () => {
+        if (countdown.minutes === 0 && countdown.seconds == 0)
+            setCountDown({seconds: 59, minutes: 5})
+        ;
         const 
             url = baseUrl(),
             id = localStorage.getItem('perfit_user_id')
         ;
+        return { url, id };
+    };
+    const resendVerificationCode = () => {
+        const { id, url } = restartTimer();
         axios.get(`${url}/api/auth/resend-verify-token/${id}`);
     };
+    const resendResetPasswordCode = () => {
+        const { id, url } = restartTimer();
+        axios.get(`${url}/api/auth/forgot-password/${id}`);
+    };
+
     // Countdown handler / timer
     useEffect(() => {
         const seconds = Number(countdown.seconds), minutes = Number(countdown.minutes);
-
         const interval = setInterval(() => {
             const time = {
                 seconds: seconds ? (seconds - 1).toString().padStart(2, '0') : 59,
                 minutes: !seconds && minutes ? minutes - 1 : minutes
             };
 
-            if (!(countdown.seconds === 0 && minutes === 0))
+            if (!(countdown.seconds == 0 && minutes === 0))
                 setCountDown(time);
         },  1000);
         
@@ -57,6 +65,26 @@ const Message = ({ type, msg }) => {
                                 <button
                                     className='timer-btn'
                                     onClick={resendVerificationCode}
+                                    disabled={!(countdown.minutes === 0 && countdown.seconds == 0)}
+                                >
+                                    Click here to resend
+                                    {!(countdown.minutes === 0 && countdown.seconds == 0) ?
+                                        <span>&nbsp;in 0{countdown.minutes}:{countdown.seconds}</span>
+                                    :   '.'
+                                    }
+                                </button>
+                            </span>
+                        </>
+                    :   null}
+                    {type === 'forgot-password-message' ?
+                        <>
+                            <span className='header'>Check your email to reset your password</span>
+                            <br />
+                            <span>
+                                Didn&apos;t get an email?<br />
+                                <button
+                                    className='timer-btn'
+                                    onClick={resendResetPasswordCode}
                                     disabled={!(countdown.minutes === 0 && countdown.seconds === 0)}
                                 >
                                     Click here to resend
@@ -67,7 +95,10 @@ const Message = ({ type, msg }) => {
                                 </button>
                             </span>
                         </>
-                    :   {msg}
+                    :   null}
+                    {type !== 'verify-message' && type !== 'forgot-password-message' ?
+                        {msg}
+                    : null
                     }
                 </div>
                 <div>

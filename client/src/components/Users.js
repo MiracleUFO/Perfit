@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useUserContext } from '../context/userContext';
 
 import baseUrl from '../helpers/baseUrl';
-import { slideInUserCards, scrollDown, beep } from '../helpers/animations';
+import { slideInUserCards, scrollDown, scrollToTop, beep } from '../helpers/animations';
 
 import 'animate.css';
 import '../styles/Users.css';
@@ -54,6 +54,7 @@ const Users = () => {
         if (e.animationName === 'pulse') {
             e.target?.removeEventListener('animationend', beepAnimationContainer);
             setJustAdded(false);
+            scrollToTop();
             window.location.reload();
         }
     };

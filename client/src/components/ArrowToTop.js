@@ -1,16 +1,12 @@
 import { useState, useEffect } from 'react';
 import isInViewport from '../helpers/isInViewPort';
+import { scrollToTop } from '../helpers/animations';
+
 import '../styles/ArrowToTop.css';
 
 const ArrowToTop = () => {
     const [visible, setVisible] = useState();
-    const scrollToTop = () => {
-        window.scroll({
-            top: 0,
-            left: 100,
-            behavior: 'smooth'
-        });
-    };
+    
 
     useEffect(() => {
         const setVisibleLoc = () => {

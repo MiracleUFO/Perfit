@@ -140,6 +140,7 @@ input:focus {
 input[type="checkbox"] {
     width: revert !important;
     height: 0.8em;
+    margin: 0;
     margin-right: 0.5em;
 }
 
@@ -335,7 +336,7 @@ input[type="date"]::before {
 }
 
 .loader-container-signup-holder {
-    height: 300px;
+    height: 305px;
 }
 
 .loader-container-add-holder {
@@ -346,15 +347,37 @@ input[type="date"]::before {
     height: 380px;
 }
 
+.signin-flex-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.85em;
+    margin-bottom: 1.5em;
+}
+
+.signin-flex-container .checkbox-holder {
+    margin-bottom: 0;
+}
+
+.signin-flex-container a {
+    font-size: 0.8em;
+    display: flex;
+}
+
 .checkbox-holder {
     display: flex;
     align-self: flex-start;
     font-size: 0.8em;
     color: #455065;
-    margin-bottom: 0.5em;
+    margin-bottom: 1em;
+    align-items: center;
 }
 
 @media (min-width: 800px) {
+    .signin-flex-container {
+        width: calc(100% + 1em);
+    }
+
     .checkbox-holder {
         margin-left: -1em;
     }

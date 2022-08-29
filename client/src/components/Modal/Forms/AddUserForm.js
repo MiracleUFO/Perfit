@@ -128,7 +128,7 @@ const AddProfileForm = () => {
     useEffect(() => {
         if (controls.successText || controls.failureText) {
             const statusSection = document.getElementById('status-text-add-modal');
-            statusSection.scrollIntoView({alignToTop: false, behavior: 'smooth'});
+            statusSection?.scrollIntoView({alignToTop: false, behavior: 'smooth'});
         }
         if (controls.successText) {
             setTimeout(() => {
@@ -250,7 +250,7 @@ const AddProfileForm = () => {
             </form>
 
             {controls.successText || controls.failureText ?
-                <p id='status-text-signup-modal' className='status-text'>
+                <p id='status-text-add-modal' className='status-text'>
                     <span className='success-text'>{controls.successText}</span>
                     <span className='failure-text'>{controls.failureText}</span>
                 </p>

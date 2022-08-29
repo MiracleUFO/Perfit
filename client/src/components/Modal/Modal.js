@@ -9,6 +9,7 @@ import AddUserForm from './Forms/AddUserForm';
 import EditProfileForm from './Forms/EditUserForm';
 import SignUpForm from './Forms/SignUpForm';
 import SignInForm from './Forms/SignInForm';
+import ResetPasswordForm from './Forms/ResetPassword';
 
 import '../../styles/Modal.css';
 import 'animate.css';
@@ -36,6 +37,9 @@ const Modal = () => {
                     setImgAttrs({...signUpFormImg});
                     break;
                 case 'sign-in':
+                    setImgAttrs({...signUpFormImg});
+                    break;
+                case 'reset':
                     setImgAttrs({...signUpFormImg});
                     break;
             }
@@ -71,6 +75,7 @@ const Modal = () => {
                                 {type === 'edit-user' ? <EditProfileForm /> : null}
                                 {type === 'sign-up' ? <SignUpForm /> : null}
                                 {type === 'sign-in' ? <SignInForm /> : null}
+                                {type === 'reset' ? <ResetPasswordForm /> : null}
                             </div>
 
                             <img className='section-img' {...imgAttrs} />

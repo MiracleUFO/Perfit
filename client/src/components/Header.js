@@ -35,14 +35,22 @@ const Header = ({ sToken }) => {
             id = localStorage.getItem('perfit_user_id')
         ;
 
-        if (sToken)
+        if (sToken && id && !window.location.href.includes('reset'))
             localStorage.setItem('perfit_user_session', sToken);
 
-        if (sessionToken) 
+        if (sessionToken && id && !window.location.href.includes('reset')) 
             url = `${baseUrl()}/api/auth/is-token-valid/${sessionToken}`
         ;   else if (id)
                 url = `${baseUrl()}/api/auth/${id}`
-            ;
+            ;   else if (localStorage.getItem('perfit_user_session'))
+                    localStorage.removeItem('perfit_user_session')
+                ;
+
+        if (window.location.href.includes('reset'))
+            window.onbeforeunload = function() {
+                window.location.replace(window.location.href.split('reset')[0]);
+            }
+        ;
 
         if (!controls.validated)
             if (url)
@@ -89,7 +97,7 @@ const Header = ({ sToken }) => {
     };
 
     useEffect(() => {
-        if (!controls.validated && sToken && !currentUser.id) {
+        if (!controls.validated && sToken && localStorage.getItem('perfit_user_session') && !currentUser.id && window.location.href.includes('verify')) {
             window.location.replace(window.location.href.split('verify')[0]);
         }
     }, [controls.validated]);

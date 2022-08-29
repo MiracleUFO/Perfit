@@ -15,7 +15,8 @@ const App = () => {
       <ModalProvider>
         <Switch location={background || location}>
           <Route exact path='/' component={Home} />
-          <Route exact path='/verify/:token' component={Home} />
+          <Route path='/reset-password' component={Home} />
+          <Route path='/verify' component={Home} />
           <Route path='/user' component={User} />
           <Route path='*' component={PageNotFound} />
         </Switch>

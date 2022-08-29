@@ -9,13 +9,19 @@ const {
     signup,
     signin,
     verify,
+    resetPassword,
     getAuth,
-    sendVerificationEmail
+    sendVerificationEmail,
+    sendForgotPasswordEmail,
 } = require('../controllers/authController');
 
 router.post('/sign-up', signup);
 
 router.post('/sign-in', exists, signin);
+
+router.get('/forgot-password/:id', sendForgotPasswordEmail);
+
+router.post('/reset-password/:token', resetPassword);
 
 router.get('/verify/:token', verify);
 
