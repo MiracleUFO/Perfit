@@ -71,16 +71,21 @@ const signin = async (req, res, next) => {
         verified
     ;
     if (req.token) {
-        const { id } = jwt.verify(req.token, process.env.EMAIL_SECRET);
-        if (!id) return res.status(401).send({ status: 401, error: 'Invalid session.' });
-        userId = id;
+        jwt.verify(req.token, process.env.EMAIL_SECRET, async (err, result) => {
+            if (err)
+                return res.status(400).send(err); 
+            ;
+            const { id } = result;
+            if (!id) return res.status(401).send({ status: 401, error: 'Invalid session.' });
+            userId = id;
 
-        const auth = await Auth.findOne({ owner_id: id });
-        if (!auth) return res.status(404).send({ status: 404, error: 'Account does not exist.' });
+            const auth = await Auth.findOne({ owner_id: id });
+            if (!auth) return res.status(404).send({ status: 404, error: 'Account does not exist.' });
 
-        email = auth.email;
-        password = auth.password;
-        verified = auth.verified;
+            email = auth.email;
+            password = auth.password;
+            verified = auth.verified;
+        });
     } else {
         if (!email || !password) return res.status(400).json({ status: 400, error: 'Required fields not sent.' });
         const auth = await Auth.findOne({ email });
@@ -162,43 +167,48 @@ const sendVerificationEmail = async (req, res, next) => {
 }
 
 const verify = (req, res, next) => {
-    const
-        { token } = req.params,
-        { id } = jwt.verify(token, process.env.EMAIL_SECRET)
-    ;
+    const { token } = req.params;
 
-    if (!id) return res.status(401).json({ status: 401, error: 'Unauthorised.' });
+    jwt.verify(token, process.env.EMAIL_SECRET, (err, result) => {
+        if (err)
+            return res.status(400).send(err); 
+        ;
 
-    V_Token.findOneAndDelete({ v_token: token })
-        .then(vToken => {
-            if (!vToken) return res.status(401).json({ status: 401, error: 'Expired verification link.' });
-            Auth.findOne({ id })
-                .then(auth => {
-                    if (!auth) res.status(404).json({ status: 404, error: 'Account does not exist.' });
-                    if (auth.verified) return res.status(401).json({ status: 401, error: 'User is already verified.' });
-                    auth.verified = true;
-                    auth.save();
-                    req.token = vToken.v_token;
-                    signin(req, res, next);
-                })
-            ;
-        })
-    ;
+        const { id } = result;
+
+        if (!id) return res.status(401).json({ status: 401, error: 'Unauthorised.' });
+
+        V_Token.findOneAndDelete({ v_token: token })
+            .then(vToken => {
+                if (!vToken) return res.status(401).json({ status: 401, error: 'Expired verification link.' });
+                Auth.findOne({ id })
+                    .then(auth => {
+                        if (!auth) res.status(404).json({ status: 404, error: 'Account does not exist.' });
+                        if (auth.verified) return res.status(401).json({ status: 401, error: 'User is already verified.' });
+                        auth.verified = true;
+                        auth.save();
+                        req.token = vToken.v_token;
+                        signin(req, res, next);
+                    })
+                ;
+            })
+        ;
+    });
 };
 
 const sendForgotPasswordEmail = (req, res, next) => {
-    const id = req.params.id;
-    Auth.findOne({ id: id })
+    const email = req.params.email;
+    Auth.findOne({ email })
         .then(auth => {
             if (!auth) 
                 return res.status(404).send({ status: 404, error: 'Account does not exist.' })
             ;
-            jwt.sign({ id }, process.env.EMAIL_SECRET2, { expiresIn: '3d' },
+            jwt.sign({ email }, process.env.EMAIL_SECRET2, { expiresIn: '3d' },
                 (err, token) => {
                     if (err) return res.json(500).json({status: 500, error: 'JWT Error: Problem sending verification token.'});
                     const formattedToken = { r_token: token };
                     try {
-                        R_Token.findOneAndUpdate({ owner_id: id }, formattedToken, {
+                        R_Token.findOneAndUpdate({ owner_id: auth.id }, formattedToken, {
                             new: true,
                             upsert: true
                         })
@@ -224,34 +234,39 @@ const sendForgotPasswordEmail = (req, res, next) => {
 };
 
 const resetPassword = (req, res) => {
-    const
-        { token } = req.params,
-        { id } = jwt.verify(token, process.env.EMAIL_SECRET2)
-    ;
-    if (!id) return res.status(401).json({ status: 401, error: 'Unauthorised.' });
+    const { token } = req.params;
+        jwt.verify(token, process.env.EMAIL_SECRET2, (err, result) => {
+            if (err)
+                return res.status(400).send(err); 
+            ;
+            const { email } = result;
+            
+            if (!email) return res.status(401).json({ status: 401, error: 'Unauthorised.' });
 
-    const {
-        password,
-        confirmPass
-    } = req.body;
-    
-    const passError = passwordValidator(password, confirmPass);
-    if (passError)
-        return res.status(400).send({status: 400, error: passError})
-    ;
-
-    R_Token.findOneAndDelete({ r_token: token })
-        .then(rToken => {
-            if (!rToken) return res.status(401).json({ status: 401, error: 'Expired reset link.' });
-            Auth.findOne({ id })
-                .then(auth => {
-                    if (!auth) res.status(404).json({ status: 404, error: 'Account does not exist.' });
-                    const salt = bcrypt.genSaltSync(10);
-                    passHash = bcrypt.hashSync(password, salt);
-                    auth.password =  passHash;
-                    auth.save();
-                    return res.status(201).json({ status: 201, message: 'Password reset succesful.'});
-                ;
+            const {
+                password,
+                confirmPass
+            } = req.body;
+            
+            const passError = passwordValidator(password, confirmPass);
+            if (passError)
+                return res.status(400).send({status: 400, error: passError})
+            ;
+        
+            R_Token.findOneAndDelete({ r_token: token })
+                .then(rToken => {
+                    if (!rToken) return res.status(401).json({ status: 401, error: 'Expired reset link.' });
+                    Auth.findOne({ email })
+                        .then(auth => {
+                            if (!auth) res.status(404).json({ status: 404, error: 'Account does not exist.' });
+                            const salt = bcrypt.genSaltSync(10);
+                            passHash = bcrypt.hashSync(password, salt);
+                            auth.password =  passHash;
+                            auth.save();
+                            return res.status(201).json({ status: 201, message: 'Password reset succesful.'});
+                        ;
+                        })
+                    ;
                 })
             ;
         })

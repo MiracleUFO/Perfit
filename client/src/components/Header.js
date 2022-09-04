@@ -60,8 +60,9 @@ const Header = ({ sToken }) => {
                         setControls({ ...controls, isVerified: res.data.verified, hasAccount: !!res.data.id, validated: !!res.data.token });
                         !res.token ?? localStorage.setItem('perfit_user_session', res.token);
                     }).catch (e => {
-                        console.log(e);
-                        setControls({ ...controls, hasAccount: false });
+                        if (e.response.data.message === 'jwt expired') 
+                            setControls({ ...controls, hasAccount: true, isVerified: true });
+                        else setControls({ ...controls, hasAccount: false, isVerified: false });
                     })
                 ;
             else setControls({...controls, hasAccount: false});

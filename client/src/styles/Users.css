@@ -22,8 +22,8 @@
 
 .container > div {
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 @media screen and (min-width: 800px) {
@@ -31,9 +31,14 @@
         padding: 20px 2.7%;
     }
 
+    .container > div {
+        justify-content: flex-start;
+        padding-left: 25px;
+    }    
+
     #users-container {
-        display: flex;
-        flex-wrap: wrap;
+        /*display: flex;
+        flex-wrap: wrap;*/
     }
 
     .container > h1 {

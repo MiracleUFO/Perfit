@@ -79,15 +79,6 @@ const SignInForm = () => {
         ;
     }, [controls.failureText, controls.successText, controls.loading]);
 
-    const sendForgotPasswordEmail = () => {
-        const 
-            url = baseUrl(),
-            id = localStorage.getItem('perfit_user_id')
-        ;
-        axios.get(`${url}/api/auth/forgot-password/${id}`);
-        setType('forgot-password-message');
-    };
-
     return (
         <div className='animate__animated animate__backInLeft form-holder'>
             <p className='welcome-text'>
@@ -134,14 +125,16 @@ const SignInForm = () => {
                         />
                         <label htmlFor='password-toggler'>Show Password</label>
                     </div>
+
                     <div className='have-account-text'>
-                        <Link
+                        <Link 
                             to={{pathname: '/', state: {background: location}}}
-                            onClick={sendForgotPasswordEmail}
+                            onClick={() => setType('forgot-password-message')}
                         >
                             Forgot Password? 
                         </Link>
                     </div>
+
                 </div>
                 <button>Sign In</button>
             </form>

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useModalContext } from '../../context/modalContext';
 
 import baseUrl from '../../helpers/baseUrl';
@@ -11,12 +12,17 @@ import '../../styles/Message.css';
 
 const Message = ({ type, msg }) => {
     const
-        { setVisible } = useModalContext(),
+        { setVisible, setType } = useModalContext(),
         [countdown, setCountDown] = useState({
             seconds: 0,
             minutes: 0,
-        })
+        }),
+        [email, setEmail] = useState(''),
+        [failureText, setFailureText] = useState(''),
+        [successText, setSuccessText] = useState(''),
+        location = useLocation()
     ;
+
     const restartTimer = () => {
         if (countdown.minutes === 0 && countdown.seconds == 0)
             setCountDown({seconds: 59, minutes: 5})
@@ -27,14 +33,34 @@ const Message = ({ type, msg }) => {
         ;
         return { url, id };
     };
+
     const resendVerificationCode = () => {
         const { id, url } = restartTimer();
         axios.get(`${url}/api/auth/resend-verify-token/${id}`);
     };
-    const resendResetPasswordCode = () => {
-        const { id, url } = restartTimer();
-        axios.get(`${url}/api/auth/forgot-password/${id}`);
+
+    const resendResetPasswordCode = (e) => {
+        e.preventDefault();
+        const { url } = restartTimer();
+        axios.get(`${url}/api/auth/forgot-password/${email}`)
+            .then(() => {
+                setSuccessText('Reset email sent. Check your email for further actions.');
+            })
+            .catch((e) => {
+                setFailureText(e.response.data.error);
+                setCountDown({
+                    seconds: 0,
+                    minutes: 0
+                });
+            })
+        ;
     };
+
+    useEffect(() => {
+        if (failureText) {
+            setFailureText('');
+        }
+    }, [email]);
 
     // Countdown handler / timer
     useEffect(() => {
@@ -74,28 +100,46 @@ const Message = ({ type, msg }) => {
                                     }
                                 </button>
                             </span>
+                            <p className='have-account-text'>
+                                Don&apos;t have an account?
+                                <Link
+                                    to={{pathname: '/', state: {background: location}}}
+                                    onClick={() => setType('sign-up')}
+                                >
+                                    &nbsp;Sign Up
+                                </Link>
+                            </p>
                         </>
                     :   null}
                     {type === 'forgot-password-message' ?
                         <>
-                            <span className='header'>Check your email to reset your password</span>
+                            <span className='header'>Forgot Password?</span>
                             <br />
                             <span>
-                                Didn&apos;t get an email?<br />
-                                <button
-                                    className='timer-btn'
-                                    onClick={resendResetPasswordCode}
-                                    disabled={!(countdown.minutes === 0 && countdown.seconds === 0)}
-                                >
-                                    Click here to resend
-                                    {!(countdown.minutes === 0 && countdown.seconds === 0) ?
-                                        <span>&nbsp;in 0{countdown.minutes}:{countdown.seconds}</span>
-                                    :   '.'
-                                    }
-                                </button>
+                                <form className='form' onSubmit={resendResetPasswordCode}>
+                                    <input 
+                                        placeholder='Enter email'
+                                        type='email'
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />&nbsp;
+                                    <button
+                                        className='timer-btn'
+                                        disabled={(!email || !(countdown.minutes === 0 && countdown.seconds == 0))}
+                                    >
+                                        Click here to send reset code
+                                        {!(countdown.minutes === 0 && countdown.seconds == 0) ?
+                                            <span>&nbsp;in 0{countdown.minutes}:{countdown.seconds}</span>
+                                        :   '.'
+                                        }
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;
+                                    {failureText ? <span className='info-text failure-text'>**{failureText}</span> : null}
+                                    {successText ? <><br /><span className='info-text success-text'>**{successText}</span></> : null}
+                                </form>
                             </span>
                         </>
-                    :   null}
+                    :   null
+                    }
                     {type !== 'verify-message' && type !== 'forgot-password-message' ?
                         {msg}
                     : null
