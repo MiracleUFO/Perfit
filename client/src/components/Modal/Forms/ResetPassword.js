@@ -24,20 +24,13 @@ const ResetPasswordForm = () => {
         [controls, setControls] = useState({...initControls}),
         [authInfo, setAuthInfo] = useState({...initAuthInfo}),
         [passwordType, setPasswordType] = useState('password'),
-        { setType, setLoading, setVisible } = useModalContext(),
+        { setType, setLoading } = useModalContext(),
         location = useLocation(),
         search = location.search,
         token = new URLSearchParams(search).get('rToken')
     ;
 
     const togglePasswordsVisibility = (checked) => setPasswordType(checked ? 'text' : 'password');
-
-    // Closes the modal when actions are finished on form
-    const closeModal = () => {
-        setVisible(false);
-        setAuthInfo({...initAuthInfo});
-        setControls({...initControls});
-    };
 
     const handleChange = (e) => setAuthInfo({...authInfo, [e.target.name]: e.target.value});
 
@@ -63,26 +56,15 @@ const ResetPasswordForm = () => {
                 .then(res => {
                     setAuthInfo({...initAuthInfo});
                     setControls({...initControls, successText: res.data.message});
-                    setType('sign-in');
+                    setTimeout(() => {
+                        setType('sign-in');
+                    }, 1500);
                 })
                 .catch(err => setControls({...initControls, failureText: err.response.data.error || 'Failed to reset. Try again.'}))
             ;
     };
 
     useEffect(() => setLoading(controls.loading), [controls.loading]);
-
-    //  Scrolls to control bottom of modal and switches to verification modal when sign up is complete
-    useEffect(() => {
-        if (controls.successText || controls.failureText)
-            document.getElementById('status-text-reset-modal').scrollIntoView({alignToTop: false, behavior: 'smooth'})
-        ;
-
-        if (controls.successText)
-            setTimeout(() => {
-                closeModal();
-            }, 2000)
-        ;
-    }, [controls.failureText, controls.successText, controls.loading]);
 
     return (
         <div className='animate__animated animate__backInLeft form-holder'>

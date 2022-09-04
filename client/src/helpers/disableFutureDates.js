@@ -17,14 +17,3 @@ const disableFutureDates = () => {
 };
 
 export default disableFutureDates;
-
-{/*<input
-                        required
-                        type='date'
-                        placeholder='DOB'
-                        title='Pick your date of birth (this is for verification purposes.)'
-                        name='dob'
-                        value={state.dob} 
-                        onChange={handleChange}
-                        max={disableFutureDates()}
-                    /> add to auth sign up (don't allow less than 13)*/}

@@ -19,7 +19,7 @@ router.post('/sign-up', signup);
 
 router.post('/sign-in', exists, signin);
 
-router.get('/forgot-password/:id', sendForgotPasswordEmail);
+router.get('/forgot-password/:email', sendForgotPasswordEmail);
 
 router.post('/reset-password/:token', resetPassword);
 

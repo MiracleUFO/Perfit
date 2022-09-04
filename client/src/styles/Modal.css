@@ -118,6 +118,7 @@
 }
   
 .modal-form input,
+.message-modal input,
 select {
     width: 90%;
     height: 48px;

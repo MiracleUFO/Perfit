@@ -25,7 +25,7 @@ const User = () => {
         [id] = useState(location.state?.id),
         [loading, setLoading] = useState(false),
         { setVisible, setType } = useModalContext(),
-        { setId, setName, currentUser } = useUserContext()
+        { setId, setName } = useUserContext()
     ;
 
     const [userInfo, setUserInfo] = useState({
@@ -63,6 +63,14 @@ const User = () => {
         return ['a', 'e', 'i', 'o', 'u'].some(vowel => userInfo.occupation.toLowerCase().startsWith(vowel)) ? ' an ':   'a';
     };
 
+    const isCurrentUser = () => {
+        const sessionToken = localStorage.getItem('perfit_user_session');
+        if (sessionToken)
+            return axios.get(`${baseUrl()}/api/auth/is-token-valid/${sessionToken}`)
+                .then(res => (res.data.email === userInfo.email))
+            ;
+    };
+
     if (loading) 
         return (
             <div className='loader-container-larger'>
@@ -90,10 +98,12 @@ const User = () => {
                                                     src={userInfo.profilePicture}
                                                     alt='User&apos;s avatar'
                                                 />
-                                                <TbEditCircle 
-                                                    className='edit-icon' 
-                                                    onClick={displayEditUserForm}
-                                                />
+                                                {isCurrentUser() ?
+                                                    <TbEditCircle 
+                                                        className='edit-icon' 
+                                                        onClick={displayEditUserForm}
+                                                    />
+                                                :   null}
                                             </div>
                                         </div>
 
@@ -103,7 +113,7 @@ const User = () => {
                                                 <p>I&apos;m {occptnArticle()} {userInfo.occupation} based in {userInfo.state}.</p>
                                             </div>
 
-                                            {currentUser.email === userInfo.email ?
+                                            {isCurrentUser() ?
                                                 <div 
                                                     className='edit-box animate__animated animate__fadeInUp'
                                                     onClick={displayEditUserForm}

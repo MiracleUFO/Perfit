@@ -23,14 +23,18 @@ const getAuthMw = (req, res, next) => {
 };
 
 const isSTokenValid = async (req, res, next) => {
-    const 
-        token = req.params.token || req.header('x-auth-token'),
-        { id } = jwt.verify(token, process.env.JWT_SECRET),
-        sToken = await S_Token.findOne({ owner_id: id })
-    ;
-    if (!id || !sToken) return res.status(401).send({ status: 401, error: 'Unauthorised.' });
-    req.id = id;
-    next();
+    const token = req.params.token || req.header('x-auth-token');
+    jwt.verify(token, process.env.JWT_SECRET, async (err, result) => {
+        if (err)
+            return res.status(400).send(err); 
+        ;
+        const { id } = result;
+        const sToken = await S_Token.findOne({ owner_id: id });
+
+        if (!id || !sToken) return res.status(401).send({ status: 401, error: 'Unauthorised.' });
+        req.id = id;
+        next();
+    });
 };
 
 module.exports = {
