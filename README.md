@@ -4,4 +4,4 @@
 To run `npm run dev`
 To seed db `cd server && node services/seeder`
 
-Now live at http://perfit-web.herokuapp.com/ 🔆  
+Now live at http://perfit-web.herokuapp.com 🔆  
