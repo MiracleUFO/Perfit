@@ -6,11 +6,11 @@
     "description": "",
     "main": "server",
     "scripts": {
-        "client": "npm start --prefix client",
+        "client": "cd client && npm install && npm start --prefix client",
         "start": "cd server && npm install && node app.js",
         "heroku-postbuild": "cd client && npm install && npm run build",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "concurrently \"nodemon server/app.js\" \"npm run client\""
+        "dev": "cd server && npm install && cd .. && concurrently \"nodemon server/app.js\" \"npm run client\""
     },
     "engines": {
         "node": "16.14.2"
