@@ -12,6 +12,9 @@ package-lock.json
 # production
 /build
 
+# local Netlify folder
+.netlify
+
 # misc
 .DS_Store
 .env.local
